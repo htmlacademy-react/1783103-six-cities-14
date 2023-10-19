@@ -1,3 +1,3 @@
-export const Setting = {
+export const SETTINGS = {
   PlacesCount: 312
 };
