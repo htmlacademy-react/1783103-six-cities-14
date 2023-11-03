@@ -7,6 +7,7 @@ type CardImageSize = 'small' |'big';
 type PlaceCardProps = {
   offer: OffersType;
   size?: CardImageSize ;
+  onCardHover?: (offerId:OffersType['id']|null) => void; // need explanation
 
 }
 
@@ -16,12 +17,10 @@ const sizeMap:Record<CardImageSize, {width:string;height:string}> = {
 };
 
 
-function PlaceCard(props:PlaceCardProps):JSX.Element {
+function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
 
-  const {offer, onCardHover, size = 'big'} = props;
+
   const totalRating = 5;
-
-
   const rate = `${Math.round ((totalRating - offer.rating) / totalRating * 100) }%`;
 
   function premiumOrNot() {
@@ -31,7 +30,7 @@ function PlaceCard(props:PlaceCardProps):JSX.Element {
       return 'NOTPremium';
     }
   }
-  // const [isActive, setIsActive] = useState();
+
   // const {isPremium, id, images, price, isFavorite, rating, title, type } = offer;
   const {id, price, title, type } = offer;
 
@@ -41,6 +40,10 @@ function PlaceCard(props:PlaceCardProps):JSX.Element {
 
   function handleMouseLeave(){
     onCardHover?.(null);
+  }
+
+  function replaceOfferParams() {
+    return `${AppRoute.Offer.replace(':offerId',id)}`;
   }
 
   return (
@@ -56,7 +59,7 @@ function PlaceCard(props:PlaceCardProps):JSX.Element {
         <span>{premiumOrNot()}</span>
       </div>
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <Link to= {`${AppRoute.Offer.replace(':offerId',id)}`}>
+        <Link to= {replaceOfferParams()}>
           <img
             className="place-card__image"
             src="img/apartment-01.jpg"
@@ -93,7 +96,7 @@ function PlaceCard(props:PlaceCardProps):JSX.Element {
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to= {`${AppRoute.Offer.replace(':offerId',id)}`}>
+          <Link to= {replaceOfferParams()}>
             {title}
           </Link>
         </h2>

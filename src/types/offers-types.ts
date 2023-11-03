@@ -22,7 +22,7 @@ export type OffersType = {
     city: OffersCity;
     description: string;
     goods: string[];
-    host: OffersHost; //doesdeleteng the array brackets influence the outcome?//
+    host: OffersHost;
     id: string;
     images: string[];
     isFavorite: boolean;
@@ -35,23 +35,3 @@ export type OffersType = {
     title: string;
     type: string;
   };
-
-export type SingleOfferType = {
-    bedrooms: number;
-    city: OffersCity[];
-    description: string;
-    goods: string[];
-    host: OffersHost[];
-    id: string;
-    images: string[];
-    isFavorite: boolean;
-    isPremium: boolean;
-    location: OffersCityLocation[];
-    maxAdults: number;
-    previewImage: string;
-    price: number;
-    rating: number;
-    title: string;
-    type: string;
-  };
-

@@ -8,7 +8,7 @@ import { AppRoute, AuthorizationStatus } from '../utils/const';
 import {HelmetProvider} from 'react-helmet-async';
 import PrivateRoute from './private-route/private-route';
 import { OffersType } from '../types/offers-types';
-import { ReviewType } from '../mocks/review-mocks';
+import { ReviewType } from '../types/reviews-types'; 
 
 type AppMainPageProps = {
     placesCount: number;
@@ -16,7 +16,7 @@ type AppMainPageProps = {
     reviews: ReviewType[];
   }
 
-function App({placesCount,offers,reviews}:AppMainPageProps): JSX.Element {
+function App({placesCount,offers,reviews}:AppMainPageProps) {
 
 
   return (

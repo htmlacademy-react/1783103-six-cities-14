@@ -1,6 +1,9 @@
 import { ChangeEvent, Fragment, useState } from 'react';
 
-function ReviewForm(): JSX.Element {
+const MIN_COMMENT_LENGTH = 50;
+const MAX_COMMENT_LENGTH = 250;
+
+function ReviewForm(){
   const starReviews = [
     5,
     4,
@@ -14,9 +17,9 @@ function ReviewForm(): JSX.Element {
 
 
   const isValid =
-    comment.length >= 1 &&
-    comment.length <= 100 &&
-    rating !== '';//check the validation later
+    comment.length >= MIN_COMMENT_LENGTH &&
+    comment.length <= MAX_COMMENT_LENGTH &&
+    rating !== '';
 
   function handleTextAreaChange(evt:ChangeEvent<HTMLTextAreaElement>){
     setComment(evt.target.value);
@@ -69,12 +72,12 @@ function ReviewForm(): JSX.Element {
         To submit review please make sure to set{' '}
           <span className="reviews__star">rating</span> and describe
         your stay with at least{' '}
-          <b className="reviews__text-amount">50 characters</b>.
+          <b className="reviews__text-amount">{MIN_COMMENT_LENGTH} characters</b>.
         </p>
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled= {false}
+          disabled= {!isValid}
         >
         Submit
         </button>

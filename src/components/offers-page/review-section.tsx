@@ -1,13 +1,11 @@
-import { ReviewType } from '../../mocks/review-mocks';
+import { ReviewType } from '../../types/reviews-types';
 import ReviewForm from './review-form';
 
 type ReviewSectionProps = {
     reviews: ReviewType[];
 }
 
-function ReviewsSection(props:ReviewSectionProps): JSX.Element {
-  const{reviews} = props;
-
+function ReviewsSection({reviews}:ReviewSectionProps){
 
   return(
 

@@ -32,11 +32,11 @@ export const offers: OffersType[] = [
     ],
     host: {
       avatarUrl: `${AVATAR_URL}?rnd=${Math.random()}`,
-      id: self.crypto.randomUUID(),
+      id: crypto.randomUUID(),
       isPro: false,
       name: 'Chris'
     },
-    id: self.crypto.randomUUID(),
+    id: crypto.randomUUID(),
     images: [
       `${IMAGE_URL}?rnd=${Math.random()}`,
       `${IMAGE_URL}?rnd=${Math.random()}`,
@@ -84,11 +84,11 @@ export const offers: OffersType[] = [
     ],
     host: {
       avatarUrl: `${AVATAR_URL}?rnd=${Math.random()}`,
-      id: self.crypto.randomUUID(),
+      id: crypto.randomUUID(),
       isPro: true,
       name: 'Angelina'
     },
-    id: self.crypto.randomUUID(),
+    id: crypto.randomUUID(),
     images: [
       `${IMAGE_URL}?rnd=${Math.random()}`,
       `${IMAGE_URL}?rnd=${Math.random()}`,
@@ -128,11 +128,11 @@ export const offers: OffersType[] = [
     ],
     host: {
       avatarUrl: `${AVATAR_URL}?rnd=${Math.random()}`,
-      id: self.crypto.randomUUID(),
+      id: crypto.randomUUID(),
       isPro: true,
       name: 'Angelina'
     },
-    id: self.crypto.randomUUID(),
+    id: crypto.randomUUID(),
     images: [
       `${IMAGE_URL}?rnd=${Math.random()}`,
       `${IMAGE_URL}?rnd=${Math.random()}`,
@@ -179,11 +179,11 @@ export const offers: OffersType[] = [
     ],
     host: {
       avatarUrl: `${AVATAR_URL}?rnd=${Math.random()}`,
-      id: self.crypto.randomUUID(),
+      id: crypto.randomUUID(),
       isPro: true,
       name: 'Angelina'
     },
-    id: self.crypto.randomUUID(),
+    id: crypto.randomUUID(),
     images: [
       `${IMAGE_URL}?rnd=${Math.random()}`,
       `${IMAGE_URL}?rnd=${Math.random()}`,

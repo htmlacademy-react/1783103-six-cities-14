@@ -8,7 +8,7 @@ import OfferImageArray from '../../components/offers-page/offer-image-array';
 import OfferGoodsArray from '../../components/offers-page/offer-goods-array';
 import { AppRoute } from '../../utils/const';
 import ReviewsSection from '../../components/offers-page/review-section';
-import { ReviewType } from '../../mocks/review-mocks';
+import { ReviewType } from '../../types/reviews-types';
 
 type OfferPageProps = {
   offers: OffersType[];
@@ -16,8 +16,8 @@ type OfferPageProps = {
 }
 
 
-function Offer(props:OfferPageProps): JSX.Element {
-  const {offers,reviews} = props;
+function Offer({offers,reviews}:OfferPageProps){
+
   const {offerId} = useParams();
 
   const currentOffer = offers.find((item) => item.id === offerId);
@@ -121,9 +121,7 @@ function Offer(props:OfferPageProps): JSX.Element {
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What`&#39;`s inside</h2>
-                <ul className="offer__inside-list">
-                  {OfferGoodsArray({currentOffer})}
-                </ul>
+                {OfferGoodsArray({currentOffer})}
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>

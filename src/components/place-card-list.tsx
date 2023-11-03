@@ -7,9 +7,7 @@ type PlaceCardListProps = {
     offers: OffersType[];
   }
 
-function PlaceCardList(props:PlaceCardListProps):JSX.Element{
-
-  const {offers,placesCount,} = props;
+function PlaceCardList({offers,placesCount}:PlaceCardListProps){
 
   const [hoveredOfferId, setHoveredOfferId] = useState <
   OffersType['id'] | null
@@ -102,7 +100,7 @@ function PlaceCardList(props:PlaceCardListProps):JSX.Element{
 
           </section>
           <div className="cities__right-section">
-            <section className="cities__map map" />
+            <section key = {hoveredOfferId} className="cities__map map" />
           </div>
         </div>
       </div>

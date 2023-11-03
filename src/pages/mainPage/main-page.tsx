@@ -10,8 +10,7 @@ type MainPageProps = {
 }
 
 
-function MainPage(props:MainPageProps): JSX.Element {
-  const {offers,placesCount} = props;
+function MainPage({offers,placesCount}:MainPageProps) {
 
   return (
     <div className="page page--gray page--main">

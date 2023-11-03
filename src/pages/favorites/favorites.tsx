@@ -9,8 +9,7 @@ type FavoritePageProps = {
   offers: OffersType[];
 }
 
-function Favorites(props:FavoritePageProps):JSX.Element {
-  const {offers} = props;
+function Favorites({offers}:FavoritePageProps) {
 
   return (
     <div className="page">
@@ -61,11 +60,12 @@ function Favorites(props:FavoritePageProps):JSX.Element {
                   </div>
                 </div>
                 <div className="favorites__places">
-                  {offers.map((offer:OffersType) => (
+                  {offers.map((offer) => (
                     <PlaceCard
                       key ={offer.id}
                       offer= {offer}
                       size = 'small'
+                      // onCardHover = {handleCardHover}
                     />
                   ))}
                 </div>
@@ -85,6 +85,7 @@ function Favorites(props:FavoritePageProps):JSX.Element {
                       key ={offer.id}
                       offer= {offer}
                       size = 'small'
+                      // onCardHover = {handleCardHover}
                     />
                   ))}
                 </div>

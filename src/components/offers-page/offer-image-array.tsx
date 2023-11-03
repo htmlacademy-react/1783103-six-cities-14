@@ -4,14 +4,12 @@ type OfferImageArrayProps = {
   currentOffer: OffersType;
 }
 
-function OfferImageArray(props:OfferImageArrayProps): JSX.Element {
-  const {currentOffer} = props;
-  const offerImages = currentOffer.images;
+function OfferImageArray({currentOffer: {id,images : offerImages}}:OfferImageArrayProps) {
 
   return(
     <>
       {offerImages.map((offerImage) => (
-        <div key = {currentOffer.id} className = "offer__image-wrapper">
+        <div key = {id} className = "offer__image-wrapper">
           <img
             className="offer__image"
             src={offerImage}
