@@ -1,4 +1,4 @@
-function MainPageEmpty(): JSX.Element {
+function MainPageEmpty() {
   return (
     <div className="page page--gray page--main">
       <header className="header">

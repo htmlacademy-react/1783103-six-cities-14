@@ -1,0 +1,19 @@
+.notFoundPage {
+    min-height:auto
+}
+
+.title {
+    margin-top: 300px;
+    margin-bottom: 100px;
+    text-align: center;
+}
+
+.text {
+    text-align: center;
+    font-size: 30px;
+    color: red;
+}
+
+.link {
+    color: palevioletred;
+}
