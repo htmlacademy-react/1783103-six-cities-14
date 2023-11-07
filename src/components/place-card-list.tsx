@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react';
 import { OffersType } from '../types/offers-types';
 import PlaceCard from './place-card/place-card';
+import Map from './map/map';
 
 type PlaceCardListProps = {
     placesCount: number;
@@ -100,7 +101,11 @@ function PlaceCardList({offers,placesCount}:PlaceCardListProps){
 
           </section>
           <div className="cities__right-section">
-            <section key = {hoveredOfferId} className="cities__map map" />
+            <Map
+              key ={hoveredOfferId}
+              offers = {offers}
+              currentCityId = {hoveredOfferId}
+            />
           </div>
         </div>
       </div>
@@ -109,5 +114,4 @@ function PlaceCardList({offers,placesCount}:PlaceCardListProps){
 
   );
 }
-
 export default PlaceCardList;

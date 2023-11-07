@@ -8,7 +8,7 @@ import { AppRoute, AuthorizationStatus } from '../utils/const';
 import {HelmetProvider} from 'react-helmet-async';
 import PrivateRoute from './private-route/private-route';
 import { OffersType } from '../types/offers-types';
-import { ReviewType } from '../types/reviews-types'; 
+import { ReviewType } from '../types/reviews-types';
 
 type AppMainPageProps = {
     placesCount: number;
