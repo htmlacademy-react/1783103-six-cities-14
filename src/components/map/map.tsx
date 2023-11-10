@@ -44,8 +44,6 @@ function Map ({offers,currentCityId}: MapProps) {
           })
           .addTo(map);
       });
-      // return () => {
-      // }
     }
   }, [map, offers,currentCityId,currentIcon,defaultIcon]);
 

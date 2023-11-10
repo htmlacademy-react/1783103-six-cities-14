@@ -2,6 +2,11 @@ import { Fragment, useState } from 'react';
 import { OffersType } from '../types/offers-types';
 import PlaceCard from './place-card/place-card';
 import Map from './map/map';
+import { CITIES } from '../utils/const';
+// import { useContext } from 'react';
+// import HandleHover from '../components/hover-context';
+// import { useHover } from '../components/hover-context';
+
 
 type PlaceCardListProps = {
     placesCount: number;
@@ -18,8 +23,14 @@ function PlaceCardList({offers,placesCount}:PlaceCardListProps){
     setHoveredOfferId(offerId);
   }
 
+  const activeCity = CITIES.Amsterdam;
+  // const handleCardHover = useContext(HoverHandlerContext);
+  // const handleCardHover = useHover();
+  // console.log(handleCardHover)
+
   return (
     <Fragment>
+
       <h1 className="visually-hidden">Cities</h1>
       <div className="tabs">
         <section className="locations container">
@@ -61,7 +72,7 @@ function PlaceCardList({offers,placesCount}:PlaceCardListProps){
         <div className="cities__places-container container">
           <section className="cities__places places">
             <h2 className="visually-hidden">Places</h2>
-            <b className="places__found">{placesCount} places to stay in Amsterdam</b>
+            <b className="places__found">{placesCount} places to stay in {activeCity}</b>
             <form className="places__sorting" action="#" method="get">
               <span className="places__sorting-caption">Sort by</span>
               <span className="places__sorting-type" tabIndex={0}>
@@ -102,6 +113,7 @@ function PlaceCardList({offers,placesCount}:PlaceCardListProps){
           </section>
           <div className="cities__right-section">
             <Map
+              block='cities'
               key ={hoveredOfferId}
               offers = {offers}
               currentCityId = {hoveredOfferId}

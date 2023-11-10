@@ -160,7 +160,7 @@ function Offer({offers,reviews}:OfferPageProps){
             </div>
           </div>
           <Map
-            className="offer__map map"
+            block="offer"
             key ={hoveredOfferId}
             offers = {offers}
             currentCityId = {hoveredOfferId}
@@ -177,6 +177,7 @@ function Offer({offers,reviews}:OfferPageProps){
                 <PlaceCard
                   key ={offer.id}
                   offer= {offer}
+                  size = 'big'
                   onCardHover = {handleCardHover}
                 />
               ))}
