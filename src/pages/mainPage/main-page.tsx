@@ -55,7 +55,10 @@ function MainPage({offers,placesCount}:MainPageProps) {
 
       <main className="page__main page__main--index">
 
-        {PlaceCardList({offers,placesCount})}
+        <PlaceCardList
+          offers = {offers}
+          placesCount = {placesCount}
+        />
 
       </main>
     </div>

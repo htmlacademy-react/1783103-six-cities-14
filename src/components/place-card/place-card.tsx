@@ -43,7 +43,7 @@ function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
   }
 
   function replaceOfferParams() {
-    return `${AppRoute.Offer.replace(':offerId',id)}`;
+    return `${AppRoute.Offer.replace(':offerIdParams',id)}`;
   }
 
   return (

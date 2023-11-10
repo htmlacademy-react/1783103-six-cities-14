@@ -9,6 +9,8 @@ import OfferGoodsArray from '../../components/offers-page/offer-goods-array';
 import { AppRoute } from '../../utils/const';
 import ReviewsSection from '../../components/offers-page/review-section';
 import { ReviewType } from '../../types/reviews-types';
+import Map from '../../components/map/map';
+import { useState } from 'react';
 
 type OfferPageProps = {
   offers: OffersType[];
@@ -18,9 +20,17 @@ type OfferPageProps = {
 
 function Offer({offers,reviews}:OfferPageProps){
 
-  const {offerId} = useParams();
+  const {offerIdParams} = useParams();
 
-  const currentOffer = offers.find((item) => item.id === offerId);
+  const [hoveredOfferId, setHoveredOfferId] = useState <
+  OffersType['id'] | null
+  > (null);
+
+  function handleCardHover(offerId:OffersType['id']|null){
+    setHoveredOfferId(offerId);
+  }
+
+  const currentOffer = offers.find((item) => item.id === offerIdParams);
 
   if (!currentOffer) {
     return <Navigate to={AppRoute.NotFound}/>;
@@ -149,7 +159,13 @@ function Offer({offers,reviews}:OfferPageProps){
               />
             </div>
           </div>
-          <section className="offer__map map" />
+          <Map
+            block="offer"
+            key ={hoveredOfferId}
+            offers = {offers}
+            currentCityId = {hoveredOfferId}
+          />
+
         </section>
         <div className="container">
           <section className="near-places places">
@@ -161,7 +177,8 @@ function Offer({offers,reviews}:OfferPageProps){
                 <PlaceCard
                   key ={offer.id}
                   offer= {offer}
-                  // onCardHover = {handleCardHover}
+                  size = 'big'
+                  onCardHover = {handleCardHover}
                 />
               ))}
             </div>
