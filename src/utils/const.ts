@@ -26,4 +26,11 @@ export enum CITIES {
   Dusseldorf = 'Dusseldorf',
 }
 
+export enum SortOptions {
+  Popular = 'Popular',
+  PriceUp ='Price: low to high',
+  PriceDown ='Price: high to low',
+  ByRating = 'Top rated first'
+}
+
 

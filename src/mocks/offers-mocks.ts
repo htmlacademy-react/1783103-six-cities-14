@@ -1,4 +1,5 @@
 import { OffersType } from '../types/offers-types';
+import { CITIES } from '../utils/const';
 
 const AVATAR_URL = 'https://i.pravatar.cc/128';
 const IMAGE_URL = 'https://picsum.photos/200';
@@ -14,7 +15,7 @@ export const offers: OffersType[] = [
         longitude: 4.85309666406198,
         zoom: 10
       },
-      name: 'Amsterdam'
+      name: CITIES.Amsterdam
     },
     description: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
     goods: [
@@ -45,7 +46,7 @@ export const offers: OffersType[] = [
       `${IMAGE_URL}?rnd=${Math.random()}`,
       `${IMAGE_URL}?rnd=${Math.random()}`,
     ],
-    isFavorite: true,
+    isFavorite: false,
     isPremium: true,
     location: {
       latitude: 52.3909553943508,
@@ -54,7 +55,7 @@ export const offers: OffersType[] = [
     },
     maxAdults: 4,
     previewImage: 'img/1.png',
-    price: 320,
+    price: 20,
     rating: 3.3,
     title: 'Beautiful & luxurious studio at great location',
     type: 'Apartment'
@@ -70,7 +71,7 @@ export const offers: OffersType[] = [
         longitude: 4.85309666406198,
         zoom: 10
       },
-      name: 'Brussels'
+      name: CITIES.Amsterdam
     },
     description: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Brussels.',
     goods: [
@@ -103,7 +104,7 @@ export const offers: OffersType[] = [
     },
     maxAdults: 4,
     previewImage: 'img/1.png',
-    price: 420,
+    price: 120,
     rating: 4,
     title: 'Not so beautiful & not really a luxurious house at mediocre location',
     type: 'House'
@@ -119,7 +120,7 @@ export const offers: OffersType[] = [
         longitude: 4.939309666406198,
         zoom: 10
       },
-      name: 'Cologne'
+      name: CITIES.Cologne
     },
     description: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Cologne.',
     goods: [
@@ -139,7 +140,7 @@ export const offers: OffersType[] = [
       `${IMAGE_URL}?rnd=${Math.random()}`,
       `${IMAGE_URL}?rnd=${Math.random()}`,
     ],
-    isFavorite: true,
+    isFavorite: false,
     isPremium: true,
     location: {
       latitude: 52.3809553943508,
@@ -148,7 +149,7 @@ export const offers: OffersType[] = [
     },
     maxAdults: 4,
     previewImage: 'img/1.png',
-    price: 120,
+    price: 420,
     rating: 2.8,
     title: 'Beautiful & luxurious studio at a squatted house',
     type: 'Room'
@@ -164,7 +165,7 @@ export const offers: OffersType[] = [
         longitude: 4.929309666406198,
         zoom: 10
       },
-      name: 'Paris'
+      name: CITIES.Paris
     },
     description: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Paris.',
     goods: [

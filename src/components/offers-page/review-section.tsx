@@ -1,12 +1,8 @@
-import { ReviewType } from '../../types/reviews-types';
+import { useAppSelector } from '../../hooks';
 import ReviewForm from './review-form';
 
-type ReviewSectionProps = {
-    reviews: ReviewType[];
-}
-
-function ReviewsSection({reviews}:ReviewSectionProps){
-
+function ReviewsSection(){
+  const reviews = useAppSelector((state) => state.reviews);
   return(
 
     <section className="offer__reviews reviews">
