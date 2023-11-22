@@ -27,8 +27,9 @@ function MainPage() {
     dispatch(displayOffers());
   }, [dispatch]);
 
-  const offersByCity = useAppSelector((state) =>state.filteredOffers);
+  const sortedOffers = useAppSelector((state) =>state.sortedOffers);
   const offersActiveCity = useAppSelector((state) =>state.activeCity);
+  const offersByCity = sortedOffers.filter((item) => item.city?.name === offersActiveCity)
 
   const placesCount = offersByCity.length;
 

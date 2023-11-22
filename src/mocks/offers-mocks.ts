@@ -64,7 +64,7 @@ export const offers: OffersType[] = [
 
   //* Brussels object//
   {
-    bedrooms: 3,
+    bedrooms: 32,
     city: {
       location: {
         latitude: 52.3609553943508,
@@ -113,7 +113,7 @@ export const offers: OffersType[] = [
 
   //* Cologne object//
   {
-    bedrooms: 3,
+    bedrooms: 13,
     city: {
       location: {
         latitude: 52.3809553943508,
@@ -158,7 +158,7 @@ export const offers: OffersType[] = [
 
   //* Paris object//
   {
-    bedrooms: 3,
+    bedrooms: 10,
     city: {
       location: {
         latitude:52.3909553943508,

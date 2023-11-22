@@ -36,16 +36,15 @@ const reducer = createReducer(initialState, (builder) => {
   builder
     .addCase (displayOffers, (state) => {
       state.offers = offers;
-      state.filteredOffers = offers.filter((item)=> item.city?.name === state.activeCity);
-      state.sortingOption = SortOptions.PriceUp;
+      // state.filteredOffers = offers.filter((item)=> item.city?.name === state.activeCity);
+      // is it even necessary to have the filteredOffers anymore?
+      state.sortingOption = SortOptions.Popular;
     })
     .addCase (setActiveCity, (state,action) => {
       state.activeCity = action.payload;
       state.filteredOffers = offers.filter((item)=> item.city?.name === action.payload);
     })
-    // .addCase (findTheOffer, (state,action) => {
-    //   state.offer = offers.find((offer) => offer.id !== action.payload);
-    // })
+
     .addCase (getFavoriteOffers, (state) => {
       state.favorites = state.offers.filter((offer)=> offer.isFavorite === true);
     })
@@ -54,9 +53,6 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase (getSortedOffers, (state, action) => {
       state.sortedOffers = action.payload;
-      // state.activeCity = action.payload;
-      // state.filteredOffers = offers.filter((item)=> item.city?.name === action.payload);
-      // state.sortedOffers = state.filteredOffers.toSorted(action.payload);
 
     })
     .addCase (getSortingOption, (state,action) => {

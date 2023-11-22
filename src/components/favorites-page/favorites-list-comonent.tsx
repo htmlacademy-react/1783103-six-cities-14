@@ -15,7 +15,7 @@ function FavoritesListComponent({offers,favoritesCity}:FavoritesListComponentPro
 
   // const currentOffers = useAppSelector((state) => state.offers);
   const offersByCity = offers.filter((item)=> item.city?.name === favoritesCity);
-  offers = offersByCity;
+
 
   return(
     <li className="favorites__locations-items">
@@ -29,7 +29,7 @@ function FavoritesListComponent({offers,favoritesCity}:FavoritesListComponentPro
       <div className="favorites__places">
 
         <PlaceCardList
-          offers = {offers}
+          offers = {offersByCity}
           size = 'small'
         />
 
