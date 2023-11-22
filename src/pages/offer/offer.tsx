@@ -25,8 +25,12 @@ function Offer(){
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getNearbyOffers(offerIdParams));
-  }, [offerIdParams]);
+    if (offerIdParams === undefined){
+      return;
+    } else {
+      dispatch(getNearbyOffers(offerIdParams));
+    }
+  },);
 
 
   function handleCardHover(offerId:OffersType['id']|null){

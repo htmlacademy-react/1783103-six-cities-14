@@ -36,8 +36,7 @@ const reducer = createReducer(initialState, (builder) => {
   builder
     .addCase (displayOffers, (state) => {
       state.offers = offers;
-      // state.filteredOffers = offers.filter((item)=> item.city?.name === state.activeCity);
-      // is it even necessary to have the filteredOffers anymore?
+      state.filteredOffers = offers.filter((item)=> item.city?.name === state.activeCity);
       state.sortingOption = SortOptions.Popular;
     })
     .addCase (setActiveCity, (state,action) => {
