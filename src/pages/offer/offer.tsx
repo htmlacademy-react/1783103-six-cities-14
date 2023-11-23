@@ -1,6 +1,5 @@
 import Logo from '../../components/logo/logo';
 import { Navigate, useParams } from 'react-router-dom';
-import PlaceCard from '../../components/place-card/place-card';
 import { Helmet } from 'react-helmet-async';
 import {OffersType } from '../../types/offers-types';
 import { OffersHost } from '../../types/offers-types';
@@ -8,19 +7,39 @@ import OfferImageArray from '../../components/offers-page/offer-image-array';
 import OfferGoodsArray from '../../components/offers-page/offer-goods-array';
 import { AppRoute } from '../../utils/const';
 import ReviewsSection from '../../components/offers-page/review-section';
-import { ReviewType } from '../../types/reviews-types';
+import Map from '../../components/map/map';
+import { useEffect, useState } from 'react';
+import PlaceCardList from '../../components/place-card/place-card-list';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getNearbyOffers } from '../../store/actions';
 
-type OfferPageProps = {
-  offers: OffersType[];
-  reviews: ReviewType[];
-}
+
+function Offer(){
+
+  const {offerIdParams} = useParams();
+  const [hoveredOfferId, setHoveredOfferId] = useState <
+  OffersType['id'] | null
+  > (null);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (offerIdParams === undefined){
+      console.log('error');
+    } else {
+      dispatch(getNearbyOffers(offerIdParams));
+    }
+  },);
 
 
-function Offer({offers,reviews}:OfferPageProps){
+  function handleCardHover(offerId:OffersType['id']|null){
+    setHoveredOfferId(offerId);
+  }
 
-  const {offerId} = useParams();
+  const offers = useAppSelector ((state) => state.offers);
+  const currentOffer = offers.find((item) => item.id === offerIdParams);
 
-  const currentOffer = offers.find((item) => item.id === offerId);
+  const nearByOffers = useAppSelector ((state) => state.nearbyOffers);
 
   if (!currentOffer) {
     return <Navigate to={AppRoute.NotFound}/>;
@@ -80,7 +99,9 @@ function Offer({offers,reviews}:OfferPageProps){
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {OfferImageArray({currentOffer})}
+              <OfferImageArray
+                currentOffer={currentOffer}
+              />
             </div>
           </div>
           <div className="offer__container container">
@@ -121,7 +142,10 @@ function Offer({offers,reviews}:OfferPageProps){
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What`&#39;`s inside</h2>
-                {OfferGoodsArray({currentOffer})}
+
+                <OfferGoodsArray
+                  currentOffer = {currentOffer}
+                />
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
@@ -144,12 +168,15 @@ function Offer({offers,reviews}:OfferPageProps){
                   </p>
                 </div>
               </div>
-              <ReviewsSection
-                reviews = {reviews}
-              />
+              <ReviewsSection/>
             </div>
           </div>
-          <section className="offer__map map" />
+          <Map
+            block="offer"
+            key ={hoveredOfferId}
+            currentCityId = {hoveredOfferId}
+          />
+
         </section>
         <div className="container">
           <section className="near-places places">
@@ -157,13 +184,12 @@ function Offer({offers,reviews}:OfferPageProps){
           Other places in the neighbourhood
             </h2>
             <div className="near-places__list places__list">
-              {offers.map((offer) => (
-                <PlaceCard
-                  key ={offer.id}
-                  offer= {offer}
-                  // onCardHover = {handleCardHover}
-                />
-              ))}
+              <PlaceCardList
+                offers= {nearByOffers}
+                onCardHover = {handleCardHover}
+                size = 'small'
+              />
+
             </div>
           </section>
         </div>

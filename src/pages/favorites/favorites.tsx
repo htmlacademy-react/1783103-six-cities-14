@@ -2,14 +2,24 @@ import Logo from '../../components/logo/logo';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../utils/const';
 import { Helmet } from 'react-helmet-async';
-import { OffersType } from '../../types/offers-types';
-import PlaceCard from '../../components/place-card/place-card';
+import FavoritesListComponent from '../../components/favorites-page/favorites-list-comonent';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useEffect } from 'react';
+import { getFavoriteOffers } from '../../store/actions';
 
-type FavoritePageProps = {
-  offers: OffersType[];
-}
+// children: ReactNode; add this type?
 
-function Favorites({offers}:FavoritePageProps) {
+function Favorites() {
+
+
+  const favorites = useAppSelector((state) =>state.favorites);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getFavoriteOffers());
+  }, [dispatch]);
+
 
   return (
     <div className="page">
@@ -51,45 +61,14 @@ function Favorites({offers}:FavoritePageProps) {
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
             <ul className="favorites__list">
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <a className="locations__item-link" href="#">
-                      <span>Amsterdam</span>
-                    </a>
-                  </div>
-                </div>
-                <div className="favorites__places">
-                  {offers.map((offer) => (
-                    <PlaceCard
-                      key ={offer.id}
-                      offer= {offer}
-                      size = 'small'
-                      // onCardHover = {handleCardHover}
-                    />
-                  ))}
-                </div>
+              {favorites.map((offer) => (
+                <FavoritesListComponent
+                  key = {offer.id}
+                  offers= {favorites}
+                  favoritesCity = {offer.city.name}
+                />
+              ))}
 
-              </li>
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <a className="locations__item-link" href="#">
-                      <span>Cologne</span>
-                    </a>
-                  </div>
-                </div>
-                <div className="favorites__places">
-                  {offers.map((offer:OffersType) => (
-                    <PlaceCard
-                      key ={offer.id}
-                      offer= {offer}
-                      size = 'small'
-                      // onCardHover = {handleCardHover}
-                    />
-                  ))}
-                </div>
-              </li>
             </ul>
           </section>
         </div>

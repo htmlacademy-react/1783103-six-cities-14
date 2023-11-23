@@ -1,16 +1,37 @@
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../utils/const';
+import SortComponent from '../../components/sort-component';
 import {OffersType} from '../../types/offers-types';
-import PlaceCardList from '../../components/place-card-list';
+import PlaceCardList from '../../components/place-card/place-card-list';
+import CitiesList from '../../components/cities-list';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import Map from '../../components/map/map';
+import { useState,useEffect} from 'react';
+import { displayOffers } from '../../store/actions';
 
-type MainPageProps = {
-  placesCount: number;
-  offers: OffersType[];
 
-}
+function MainPage() {
 
 
-function MainPage({offers,placesCount}:MainPageProps) {
+  const [hoveredOfferId, setHoveredOfferId] = useState <
+  OffersType['id'] | null
+  > (null);
+
+  function handleCardHover(offerId:OffersType['id']|null){
+    setHoveredOfferId(offerId);
+  }
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(displayOffers());
+  }, [dispatch]);
+
+  const sortedOffers = useAppSelector((state) =>state.sortedOffers);
+  const offersActiveCity = useAppSelector((state) =>state.activeCity);
+  const offersByCity = sortedOffers.filter((item) => item.city?.name === offersActiveCity)
+
+  const placesCount = offersByCity.length;
 
   return (
     <div className="page page--gray page--main">
@@ -54,9 +75,36 @@ function MainPage({offers,placesCount}:MainPageProps) {
       </header>
 
       <main className="page__main page__main--index">
+        <h1 className="visually-hidden">Cities</h1>
+        <div className="tabs">
+          <section className="locations container">
+            <ul className="locations__list tabs__list">
+              <CitiesList/>
+            </ul>
+          </section>
+        </div>
+        <div className="cities">
+          <div className="cities__places-container container">
+            <section className="cities__places places">
+              <h2 className="visually-hidden">Places</h2>
+              <b className="places__found">{placesCount} places to stay in {offersActiveCity}</b>
+              <SortComponent/>
 
-        {PlaceCardList({offers,placesCount})}
-
+              <PlaceCardList
+                offers = {offersByCity}
+                onCardHover = {handleCardHover}
+                size = 'big'
+              />
+            </section>
+            <div className="cities__right-section">
+              <Map
+                block='cities'
+                key ={hoveredOfferId}
+                currentCityId = {hoveredOfferId}
+              />
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );

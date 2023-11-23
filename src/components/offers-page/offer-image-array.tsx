@@ -9,7 +9,7 @@ function OfferImageArray({currentOffer: {id,images : offerImages}}:OfferImageArr
   return(
     <>
       {offerImages.map((offerImage) => (
-        <div key = {id} className = "offer__image-wrapper">
+        <div key = {crypto.randomUUID()} className = "offer__image-wrapper">
           <img
             className="offer__image"
             src={offerImage}
