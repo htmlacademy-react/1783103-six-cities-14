@@ -17,7 +17,6 @@ import { getNearbyOffers } from '../../store/actions';
 function Offer(){
 
   const {offerIdParams} = useParams();
-
   const [hoveredOfferId, setHoveredOfferId] = useState <
   OffersType['id'] | null
   > (null);
@@ -26,7 +25,7 @@ function Offer(){
 
   useEffect(() => {
     if (offerIdParams === undefined){
-      return;
+      console.log('error');
     } else {
       dispatch(getNearbyOffers(offerIdParams));
     }

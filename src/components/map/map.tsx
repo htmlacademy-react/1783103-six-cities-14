@@ -28,7 +28,7 @@ const currentIcon = new Icon({
 function Map ({currentCityId,block}: MapProps) {
 
   const currentOffers = useAppSelector((state) => state.filteredOffers);
-
+console.log(currentOffers)
   const mapRef = useRef(null);
   const map = useMap(mapRef,currentOffers);
 
