@@ -1,4 +1,4 @@
-import Logo from '../../components/logo/logo';
+import Logo from '../../components/main-page/logo/logo';
 import { Navigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {OffersType } from '../../types/offers-types';
@@ -11,36 +11,34 @@ import Map from '../../components/map/map';
 import { useEffect, useState } from 'react';
 import PlaceCardList from '../../components/place-card/place-card-list';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getNearbyOffers } from '../../store/actions';
+import { fetchNearbyOffers, fetchTheOffer } from '../../store/api-actions';
 
 
 function Offer(){
 
-  const {offerIdParams} = useParams();
   const [hoveredOfferId, setHoveredOfferId] = useState <
   OffersType['id'] | null
   > (null);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (offerIdParams === undefined){
-      console.log('error');
-    } else {
-      dispatch(getNearbyOffers(offerIdParams));
-    }
-  },);
-
-
   function handleCardHover(offerId:OffersType['id']|null){
     setHoveredOfferId(offerId);
   }
 
-  const offers = useAppSelector ((state) => state.offers);
-  const currentOffer = offers.find((item) => item.id === offerIdParams);
+  const {offerId} = useParams();
 
+  const dispatch = useAppDispatch();
+
+  useEffect (() => {
+    if (offerId !== undefined) {
+      dispatch(fetchTheOffer(offerId));
+      dispatch (fetchNearbyOffers(offerId));
+    }
+  },[dispatch,offerId]);
+
+  const currentOffer = useAppSelector ((state) => state.offer);
   const nearByOffers = useAppSelector ((state) => state.nearbyOffers);
-
+  // fix the issue with navigating to the notfound page first
+  // const {areOffersLoading} = useAppSelector((state) => state)
+  // console.log( areOffersLoading)
   if (!currentOffer) {
     return <Navigate to={AppRoute.NotFound}/>;
   }
@@ -172,6 +170,7 @@ function Offer(){
             </div>
           </div>
           <Map
+            offers= {nearByOffers}
             block="offer"
             key ={hoveredOfferId}
             currentCityId = {hoveredOfferId}

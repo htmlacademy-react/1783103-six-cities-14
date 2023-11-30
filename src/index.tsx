@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app';
-import { SETTINGS } from './utils/const';
-
-import { offers } from './mocks/offers-mocks';
-import { reviews } from './mocks/review-mocks';
-
 import { Provider } from 'react-redux';
 import { store } from './store';
+import {ToastContainer} from 'react-toastify';
+import { checkAuthAction, fetchOffersAction } from './store/api-actions';
+
+store.dispatch(checkAuthAction());
+store.dispatch(fetchOffersAction());
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,11 +16,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store = {store}>
-      <App
-        placesCount = {SETTINGS.PlacesCount}
-        offers = {offers}
-        reviews = {reviews}
-      />
+      <ToastContainer/>
+      <App/>
     </Provider>
   </React.StrictMode>
 );

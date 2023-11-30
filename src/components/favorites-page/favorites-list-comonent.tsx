@@ -16,7 +16,6 @@ function FavoritesListComponent({offers,favoritesCity}:FavoritesListComponentPro
   // const currentOffers = useAppSelector((state) => state.offers);
   const offersByCity = offers.filter((item)=> item.city?.name === favoritesCity);
 
-
   return(
     <li className="favorites__locations-items">
       <div className="favorites__locations locations locations--current">

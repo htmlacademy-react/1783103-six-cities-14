@@ -6,6 +6,7 @@ function useMap(mapRef:MutableRefObject <HTMLElement | null>, offers:OffersType[
   const [map, setMap] = useState<null | Map> (null);
   const isRenderedRef = useRef(false);
 
+
   useEffect(() => {
     if (mapRef.current !== null && !isRenderedRef.current) {
       const instance = leaflet.map(mapRef.current, {
@@ -13,7 +14,7 @@ function useMap(mapRef:MutableRefObject <HTMLElement | null>, offers:OffersType[
           lat: offers[0].location.latitude,
           lng: offers[0].location.longitude,
         },
-        zoom: offers[0].location.zoom,
+        zoom: 12,
       });
 
       leaflet

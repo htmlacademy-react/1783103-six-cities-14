@@ -6,8 +6,9 @@ export enum AppRoute {
     Root = '/',
     Login = '/login',
     Favorites = '/favorites',
-    Offer = '/offer/:offerIdParams',
-    NotFound = '/NotFound'
+    Offer = '/offer/:offerId',
+    NotFound = '/NotFound',
+    Result = '/result',
 
 }
 
@@ -33,4 +34,15 @@ export enum SortOptions {
   ByRating = 'Top rated first'
 }
 
+export enum APIRoute {
+  offers = '/offers',
+  offer = '/offerId',
+  Login = '/login',
+  Logout = '/logout',
+  Reviews = '/comments',
+  NearbyOffers = '/nearby',
+  Favorites = 'favorite'
+}
+
+export const TIMEOUT_SHOW_ERROR = 2000;
 

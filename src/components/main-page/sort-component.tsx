@@ -1,7 +1,7 @@
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { SortOptions } from '../utils/const';
-import { getSortedOffers, getSortingOption } from '../store/actions';
-import { OffersType } from '../types/offers-types';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { SortOptions } from '../../utils/const';
+import { getSortedOffers, getSortingOption } from '../../store/actions';
+import { OffersType } from '../../types/offers-types';
 import { useState } from 'react';
 
 const SortOptionsArray = Object.values(SortOptions);
@@ -33,8 +33,6 @@ function SortComponent() {
     return sortedOffers;
 
   };
-
-
   const [isOpened, setIsOpened] = useState(false);
   function handleClick() {
     setIsOpened((prevIsOpened) => !prevIsOpened);

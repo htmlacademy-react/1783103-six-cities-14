@@ -1,8 +1,9 @@
-import { CITIES } from '../utils/const';
-import { useAppDispatch } from '../hooks';
-import { useAppSelector } from '../hooks';
+import { CITIES } from '../../utils/const';
+import { useAppDispatch } from '../../hooks';
+import { useAppSelector } from '../../hooks';
 
-import { setActiveCity } from '../store/actions';
+import { setActiveCity } from '../../store/actions';
+import { Link } from 'react-router-dom';
 
 const citiesArray = Object.values(CITIES);
 
@@ -15,14 +16,14 @@ function CitiesList() {
     <>
       {citiesArray.map((city) => (
         <li key = {city} className="locations__item">
-          <a
+          <Link
             className={`locations__item-link tabs__item 
               ${city === currentActiveCity ? 'tabs__item--active' : ''}`}
-            href="#"
+            to="#"
             onClick={() => dispatch(setActiveCity(city))}
           >
             <span>{city}</span>
-          </a>
+          </Link>
         </li>
       ))}
     </>

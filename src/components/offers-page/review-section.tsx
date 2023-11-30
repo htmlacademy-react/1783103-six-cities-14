@@ -1,7 +1,18 @@
-import { useAppSelector } from '../../hooks';
+import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { fetchReviews } from '../../store/api-actions';
 import ReviewForm from './review-form';
+import { useEffect } from 'react';
 
 function ReviewsSection(){
+  const {offerId} = useParams();
+  const dispatch = useAppDispatch();
+
+  useEffect (() => {
+    if (offerId !== undefined) {
+      dispatch(fetchReviews(offerId));
+    }
+  },[dispatch,offerId]);
   const reviews = useAppSelector((state) => state.reviews);
   return(
 

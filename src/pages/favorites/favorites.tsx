@@ -1,26 +1,31 @@
-import Logo from '../../components/logo/logo';
+import Logo from '../../components/main-page/logo/logo';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../utils/const';
 import { Helmet } from 'react-helmet-async';
 import FavoritesListComponent from '../../components/favorites-page/favorites-list-comonent';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useEffect } from 'react';
-import { getFavoriteOffers } from '../../store/actions';
+// import { getFavoriteOffers } from '../../store/actions';
+import { fetchFavorites } from '../../store/api-actions';
+import { OffersType } from '../../types/offers-types';
 
 // children: ReactNode; add this type?
 
-function Favorites() {
+type FavoritesProps = {
+  offers: OffersType[];
+}
 
+function Favorites({offers}: FavoritesProps) {
 
-  const favorites = useAppSelector((state) =>state.favorites);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getFavoriteOffers());
-  }, [dispatch]);
+    dispatch(fetchFavorites(offers));
+  }, [offers,dispatch]);
 
-
+  const favorites = useAppSelector((state) =>state.favorites);
+  // console.log(favorites)
   return (
     <div className="page">
       <Helmet>

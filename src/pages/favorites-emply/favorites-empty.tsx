@@ -1,4 +1,4 @@
-import Logo from '../../components/logo/logo';
+import Logo from '../../components/main-page/logo/logo';
 
 function FavoritesEmpty() {
   return (

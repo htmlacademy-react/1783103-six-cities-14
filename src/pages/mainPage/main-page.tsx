@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../utils/const';
-import SortComponent from '../../components/sort-component';
+import SortComponent from '../../components/main-page/sort-component';
 import {OffersType} from '../../types/offers-types';
 import PlaceCardList from '../../components/place-card/place-card-list';
-import CitiesList from '../../components/cities-list';
+import CitiesList from '../../components/main-page/cities-list';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import Map from '../../components/map/map';
 import { useState,useEffect} from 'react';
 import { displayOffers } from '../../store/actions';
+import { logoutAction } from '../../store/api-actions';
 
 
 function MainPage() {
@@ -29,9 +30,14 @@ function MainPage() {
 
   const sortedOffers = useAppSelector((state) =>state.sortedOffers);
   const offersActiveCity = useAppSelector((state) =>state.activeCity);
-  const offersByCity = sortedOffers.filter((item) => item.city?.name === offersActiveCity)
+  const offersByCity = sortedOffers.filter((item)=> item.city?.name === offersActiveCity);
+
 
   const placesCount = offersByCity.length;
+
+  // if (placesCount === 0) {
+  //   console.log ('Need to add "Если предложения отсутствуют, то в списке отображается надпись «No places to stay available», а вместо карты отображается статичное изображение. См. пример соответствующей страницы макета."') ;
+  // }
 
   return (
     <div className="page page--gray page--main">
@@ -64,9 +70,16 @@ function MainPage() {
                   </Link>
                 </li>
                 <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
+                  <Link
+                    className="header__nav-link"
+                    onClick={(evt) => {
+                      evt.preventDefault();
+                      dispatch(logoutAction());
+                    }}
+                    to='/'
+                  >
                     <span className="header__signout">Sign out</span>
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -101,6 +114,7 @@ function MainPage() {
                 block='cities'
                 key ={hoveredOfferId}
                 currentCityId = {hoveredOfferId}
+                offers = {offersByCity}
               />
             </div>
           </div>
