@@ -1,12 +1,19 @@
-import { ReviewType } from '../../types/reviews-types';
+import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { fetchReviews } from '../../store/api-actions';
 import ReviewForm from './review-form';
+import { useEffect } from 'react';
 
-type ReviewSectionProps = {
-    reviews: ReviewType[];
-}
+function ReviewsSection(){
+  const {offerId} = useParams();
+  const dispatch = useAppDispatch();
 
-function ReviewsSection({reviews}:ReviewSectionProps){
-
+  useEffect (() => {
+    if (offerId !== undefined) {
+      dispatch(fetchReviews(offerId));
+    }
+  },[dispatch,offerId]);
+  const reviews = useAppSelector((state) => state.reviews);
   return(
 
     <section className="offer__reviews reviews">

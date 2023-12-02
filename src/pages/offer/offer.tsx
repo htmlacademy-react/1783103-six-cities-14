@@ -1,6 +1,4 @@
-import Logo from '../../components/logo/logo';
 import { Navigate, useParams } from 'react-router-dom';
-import PlaceCard from '../../components/place-card/place-card';
 import { Helmet } from 'react-helmet-async';
 import {OffersType } from '../../types/offers-types';
 import { OffersHost } from '../../types/offers-types';
@@ -8,20 +6,39 @@ import OfferImageArray from '../../components/offers-page/offer-image-array';
 import OfferGoodsArray from '../../components/offers-page/offer-goods-array';
 import { AppRoute } from '../../utils/const';
 import ReviewsSection from '../../components/offers-page/review-section';
-import { ReviewType } from '../../types/reviews-types';
+import Map from '../../components/map/map';
+import { useEffect, useState } from 'react';
+import PlaceCardList from '../../components/place-card/place-card-list';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { fetchNearbyOffers, fetchTheOffer } from '../../store/api-actions';
+import PageHeader from '../../components/main-page/header/header';
 
-type OfferPageProps = {
-  offers: OffersType[];
-  reviews: ReviewType[];
-}
 
+function Offer(){
 
-function Offer({offers,reviews}:OfferPageProps){
+  const [hoveredOfferId, setHoveredOfferId] = useState <
+  OffersType['id'] | null
+  > (null);
+  function handleCardHover(offerId:OffersType['id']|null){
+    setHoveredOfferId(offerId);
+  }
 
   const {offerId} = useParams();
 
-  const currentOffer = offers.find((item) => item.id === offerId);
+  const dispatch = useAppDispatch();
 
+  useEffect (() => {
+    if (offerId !== undefined) {
+      dispatch(fetchTheOffer(offerId));
+      dispatch (fetchNearbyOffers(offerId));
+    }
+  },[dispatch,offerId]);
+
+  const currentOffer = useAppSelector ((state) => state.offer);
+  const nearByOffers = useAppSelector ((state) => state.nearbyOffers);
+  // fix the issue with navigating to the notfound page first
+  // const {areOffersLoading} = useAppSelector((state) => state)
+  // console.log( areOffersLoading)
   if (!currentOffer) {
     return <Navigate to={AppRoute.NotFound}/>;
   }
@@ -46,41 +63,16 @@ function Offer({offers,reviews}:OfferPageProps){
       <Helmet>
         <title>6 cities. Offers</title>
       </Helmet>
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Logo/>
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a
-                    className="header__nav-link header__nav-link--profile"
-                    href="#"
-                  >
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                  Oliver.conner@gmail.com
-                    </span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+
+      <PageHeader/>
+
       <main className="page__main page__main--offer">
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {OfferImageArray({currentOffer})}
+              <OfferImageArray
+                currentOffer={currentOffer}
+              />
             </div>
           </div>
           <div className="offer__container container">
@@ -121,7 +113,10 @@ function Offer({offers,reviews}:OfferPageProps){
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What`&#39;`s inside</h2>
-                {OfferGoodsArray({currentOffer})}
+
+                <OfferGoodsArray
+                  currentOffer = {currentOffer}
+                />
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
@@ -144,12 +139,16 @@ function Offer({offers,reviews}:OfferPageProps){
                   </p>
                 </div>
               </div>
-              <ReviewsSection
-                reviews = {reviews}
-              />
+              <ReviewsSection/>
             </div>
           </div>
-          <section className="offer__map map" />
+          <Map
+            offers= {nearByOffers}
+            block="offer"
+            key ={hoveredOfferId}
+            currentCityId = {hoveredOfferId}
+          />
+
         </section>
         <div className="container">
           <section className="near-places places">
@@ -157,13 +156,12 @@ function Offer({offers,reviews}:OfferPageProps){
           Other places in the neighbourhood
             </h2>
             <div className="near-places__list places__list">
-              {offers.map((offer) => (
-                <PlaceCard
-                  key ={offer.id}
-                  offer= {offer}
-                  // onCardHover = {handleCardHover}
-                />
-              ))}
+              <PlaceCardList
+                offers= {nearByOffers}
+                onCardHover = {handleCardHover}
+                size = 'small'
+              />
+
             </div>
           </section>
         </div>

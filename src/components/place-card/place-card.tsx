@@ -1,13 +1,17 @@
-import { Link } from 'react-router-dom';
-import { AppRoute } from '../../utils/const';
+import { Link, } from 'react-router-dom';
+import { AppRoute, } from '../../utils/const';
 import { OffersType } from '../../types/offers-types';
+import { useState } from 'react';
+import PremiumOrNot from '../main-page/is-premium';
+import { changeToFavorites } from '../../store/api-actions';
+import { useAppDispatch } from '../../hooks';
 
 type CardImageSize = 'small' |'big';
 
 type PlaceCardProps = {
   offer: OffersType;
   size?: CardImageSize ;
-  onCardHover?: (offerId:OffersType['id']|null) => void; // need explanation
+  onCardHover?: (offerId:OffersType['id']|null) => void;
 
 }
 
@@ -19,20 +23,21 @@ const sizeMap:Record<CardImageSize, {width:string;height:string}> = {
 
 function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
 
+  const [isActive, setIsActive] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const handleClick = (event) => {
+
+    dispatch(changeToFavorites(offer.id));
+
+    setIsActive ((current) => !current);
+  };
 
   const totalRating = 5;
   const rate = `${Math.round ((totalRating - offer.rating) / totalRating * 100) }%`;
 
-  function premiumOrNot() {
-    if (offer.isPremium === true) {
-      return 'Premium';
-    } else {
-      return 'NOTPremium';
-    }
-  }
-
   // const {isPremium, id, images, price, isFavorite, rating, title, type } = offer;
-  const {id, price, title, type } = offer;
+  const {id, price, title, type, previewImage } = offer;
 
   function handleMouseEnter(){
     onCardHover?.(id);
@@ -55,14 +60,14 @@ function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
       onMouseLeave ={handleMouseLeave}
     >
 
-      <div className="place-card__mark">
-        <span>{premiumOrNot()}</span>
-      </div>
+      <PremiumOrNot
+        offer = {offer}
+      />
       <div className="cities__image-wrapper place-card__image-wrapper">
         <Link to= {replaceOfferParams()}>
           <img
             className="place-card__image"
-            src="img/apartment-01.jpg"
+            src={previewImage}
             alt={title}
             {...sizeMap[size]}
           />
@@ -76,7 +81,8 @@ function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           <button
-            className="place-card__bookmark-button button"
+            onClick = {handleClick}
+            className= {isActive ? 'place-card__bookmark-button--active button ' : 'button place-card__bookmark-button '}
             type="button"
           >
             <svg

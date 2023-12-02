@@ -1,3 +1,5 @@
+import { CITIES } from '../utils/const';
+
 export type OffersCityLocation = {
     latitude: number;
     longitude: number;
@@ -6,7 +8,7 @@ export type OffersCityLocation = {
 
 export type OffersCity = {
     location: OffersCityLocation;
-    name: string;
+    name: CITIES;
   };
 
 export type OffersHost = {
