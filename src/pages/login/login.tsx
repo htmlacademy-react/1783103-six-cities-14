@@ -1,5 +1,5 @@
 import { FormEvent, useRef } from 'react';
-import Logo from '../../components/main-page/logo/logo';
+import Logo from '../../components/main-page/header/logo';
 import { Helmet } from 'react-helmet-async';
 import { useAppDispatch } from '../../hooks';
 import { loginAction } from '../../store/api-actions';

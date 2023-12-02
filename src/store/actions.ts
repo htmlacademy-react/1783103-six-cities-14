@@ -31,4 +31,5 @@ export const setLoadingStatus = createAction<boolean> ('cities/setLoadingStatus'
 
 export const redirectToRoute = createAction<AppRoute>('game/redirectToRoute');
 
+export const setUser = createAction <string> ('user/userName');
 

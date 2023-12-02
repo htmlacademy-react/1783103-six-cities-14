@@ -1,7 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
 import { AuthorizationStatus, CITIES, SortOptions } from '../utils/const';
 import { setActiveCity,
-  getFavoriteOffers, getNearbyOffers,getSortedOffers, getSortingOption, getReviews, loadOffers, requireAuthorization, setError, setLoadingStatus, findTheOffer } from './actions';
+  getFavoriteOffers, getNearbyOffers,getSortedOffers, getSortingOption, getReviews, loadOffers, requireAuthorization, setError, setLoadingStatus, findTheOffer, setUser } from './actions';
 import { OffersType } from '../types/offers-types';
 import { ReviewType } from '../types/reviews-types';
 
@@ -19,6 +19,7 @@ const initialState : {
   authorizationStatus:string;
   error: string|null;
   areOffersLoading: boolean;
+  userName: string |undefined;
 
 } = {
   activeCity:CITIES.Paris,
@@ -33,6 +34,7 @@ const initialState : {
   authorizationStatus: AuthorizationStatus.Unknown,
   error: null,
   areOffersLoading: false,
+  userName: undefined,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -42,13 +44,16 @@ const reducer = createReducer(initialState, (builder) => {
       state.filteredOffers = state.offers.filter((item)=> item.city?.name === state.activeCity);
       state.sortingOption = SortOptions.Popular;
       state.sortedOffers = action.payload;
+      // debugger
+      // state.favorites = state.offers.filter((offer)=> offer.isFavorite === true);
     })
     .addCase (setActiveCity, (state,action) => {
       state.activeCity = action.payload;
     })
 
     .addCase (getFavoriteOffers, (state,action) => {
-      state.offers = action.payload;
+      debugger
+      // state.offers = action.payload;
       state.favorites = action.payload;
       // state.favorites = state.offers.filter((offer)=> offer.isFavorite === true);
     })
@@ -71,6 +76,9 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase (requireAuthorization, (state,action) => {
       state.authorizationStatus = action.payload;
+    })
+    .addCase (setUser, (state,action) => {
+      state.userName = action.payload;
     })
     .addCase (setError, (state, action) => {
       state.error = action.payload;

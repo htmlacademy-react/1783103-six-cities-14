@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
-import { AppRoute } from '../../utils/const';
+import { Link, } from 'react-router-dom';
+import { AppRoute, } from '../../utils/const';
 import { OffersType } from '../../types/offers-types';
 import { useState } from 'react';
 import PremiumOrNot from '../main-page/is-premium';
+import { changeToFavorites } from '../../store/api-actions';
+import { useAppDispatch } from '../../hooks';
 
 type CardImageSize = 'small' |'big';
 
@@ -22,8 +24,12 @@ const sizeMap:Record<CardImageSize, {width:string;height:string}> = {
 function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
 
   const [isActive, setIsActive] = useState(false);
+  const dispatch = useAppDispatch();
 
   const handleClick = (event) => {
+
+    dispatch(changeToFavorites(offer.id));
+
     setIsActive ((current) => !current);
   };
 

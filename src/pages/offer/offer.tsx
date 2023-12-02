@@ -1,4 +1,3 @@
-import Logo from '../../components/main-page/logo/logo';
 import { Navigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {OffersType } from '../../types/offers-types';
@@ -12,6 +11,7 @@ import { useEffect, useState } from 'react';
 import PlaceCardList from '../../components/place-card/place-card-list';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchNearbyOffers, fetchTheOffer } from '../../store/api-actions';
+import PageHeader from '../../components/main-page/header/header';
 
 
 function Offer(){
@@ -63,36 +63,9 @@ function Offer(){
       <Helmet>
         <title>6 cities. Offers</title>
       </Helmet>
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Logo/>
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a
-                    className="header__nav-link header__nav-link--profile"
-                    href="#"
-                  >
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                  Oliver.conner@gmail.com
-                    </span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+
+      <PageHeader/>
+
       <main className="page__main page__main--offer">
         <section className="offer">
           <div className="offer__gallery-container container">
