@@ -3,13 +3,12 @@ import { AppDispatch,State } from '../types/state';
 import { AxiosInstance } from 'axios';
 import { OffersType } from '../types/offers-types';
 import { APIRoute, AppRoute, TIMEOUT_SHOW_ERROR } from '../utils/const';
-import { getReviews, redirectToRoute, setError, setUser } from './actions';
-import { AuthData } from '../types/auth-data-type';
+import {getReviews,redirectToRoute, setError,setUser } from './actions';
+import { AuthData, ReviewData} from '../types/auth-data-type';
 import { UserData } from '../types/user-data-types';
 import { dropToken, saveToken } from '../services/token';
 import { store } from '.';
 import { ReviewType } from '../types/reviews-types';
-
 
 export const fetchOffersAction = createAsyncThunk <OffersType[], undefined, {
     dispatch: AppDispatch;
@@ -72,12 +71,33 @@ export const fetchReviews = createAsyncThunk<void, OffersType['id'],{
     dispatch(getReviews(data));
   }
 );
+type ReviewApiThing = {
+    offerId:string | undefined;
+    review: ReviewData;
+    // object: string;
+}
+export const postReviews = createAsyncThunk<ReviewType, ReviewApiThing,{
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+}
+>(
+  '/offer/postReview',
+  async (object,{extra:api}) => {
+    const {offerId,review} = object;
+    // console.log(object);
+    const {data} = await api.post <ReviewType>(`${APIRoute.Reviews}/${offerId}`,review);
+    return data;
+
+  }
+);
+
 
 // add action to post reviews
 
 // Gotta fix the Favorites page,
 //as the favorite offers are not being sent to the server just yet
-export const changeToFavorites = createAsyncThunk<OffersType[], OffersType,{
+export const changeToFavorites = createAsyncThunk<OffersType, OffersType,{
     dispatch: AppDispatch;
     state:State;
     extra:AxiosInstance;
@@ -85,8 +105,9 @@ export const changeToFavorites = createAsyncThunk<OffersType[], OffersType,{
 >(
   'offers/changeToFavorites',
 
-  async({id,isFavorite}, { extra:api}) => {
-    const{data} = await api.post <OffersType[]>(
+  async({id,isFavorite}, {extra:api}) => {
+
+    const{data} = await api.post <OffersType>(
       `${APIRoute.Favorites}/${id}/${Number(isFavorite)}`
     );
     return data;
@@ -100,7 +121,8 @@ export const fetchFavorites = createAsyncThunk<OffersType[], OffersType[], {
   }
   >(
     'favorite/fetchFavorites',
-    async (_arg, { extra: api}) => {
+    async (_arg, {extra: api}) => {
+
       const {data} = await api.get <OffersType[]> (APIRoute.Favorites);
       return data;
     },
@@ -114,6 +136,7 @@ export const checkAuthAction = createAsyncThunk<void, undefined, {
   >(
     'user/checkAuth',
     async (_arg, {extra: api}) => {
+
       await api.get (APIRoute.Login);
 
     },
@@ -129,6 +152,7 @@ export const loginAction = createAsyncThunk<void, AuthData, {
     async ({login: email, password}, {dispatch, extra: api}) => {
       const {data: {token}} = await api.post<UserData>(APIRoute.Login, {email, password});
       saveToken(token);
+      //   dispatch(requireAuthorization(AuthorizationStatus.Auth));
       dispatch(setUser(email));
       dispatch(redirectToRoute(AppRoute.Root));
     },
@@ -141,10 +165,10 @@ export const logoutAction = createAsyncThunk<void, undefined, {
   }
   >(
     'user/logout',
-    async (_arg, {dispatch,extra: api}) => {
+    async (_arg, {extra: api}) => {
       await api.delete(APIRoute.Logout);
-      dispatch(redirectToRoute(AppRoute.Login));
       dropToken();
+    //   dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
     },
   );
 
@@ -157,3 +181,4 @@ export const clearErrorAction = createAsyncThunk (
     );
   },
 );
+

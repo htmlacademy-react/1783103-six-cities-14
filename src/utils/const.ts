@@ -44,5 +44,11 @@ export enum APIRoute {
   Favorites = 'favorite'
 }
 
+export enum NameSpace {
+  Cities = 'cities',
+  Offers = 'offers',
+  User = 'user',
+}
+
 export const TIMEOUT_SHOW_ERROR = 2000;
 

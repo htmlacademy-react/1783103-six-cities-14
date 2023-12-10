@@ -2,12 +2,13 @@ import { Link } from 'react-router-dom';
 import { AppRoute } from '../../utils/const';
 import { Helmet } from 'react-helmet-async';
 import FavoritesListComponent from '../../components/favorites-page/favorites-list-comonent';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { useEffect } from 'react';
+import {useAppDispatch, useAppSelector } from '../../hooks';
 // import { getFavoriteOffers } from '../../store/actions';
-import { fetchFavorites } from '../../store/api-actions';
-import { OffersType } from '../../types/offers-types';
 import PageHeader from '../../components/main-page/header/header';
+import { getFavoriteOffers } from '../../store/cities-action/selectors';
+import { useEffect } from 'react';
+import { fetchFavorites } from '../../store/api-api-actions';
+import { OffersType } from '../../types/offers-types';
 
 // children: ReactNode; add this type?
 
@@ -15,7 +16,7 @@ type FavoritesProps = {
   offers: OffersType[];
 }
 
-function Favorites({offers}: FavoritesProps) {
+function Favorites({offers}:FavoritesProps) {
 
 
   const dispatch = useAppDispatch();
@@ -24,9 +25,11 @@ function Favorites({offers}: FavoritesProps) {
     dispatch(fetchFavorites(offers));
   }, [offers,dispatch]);
 
-  const favorites = useAppSelector((state) =>state.favorites);
-  console.log(favorites)
+  const favorites = useAppSelector(getFavoriteOffers);
+
+
   return (
+
     <div className="page">
       <Helmet>
         <title>6 cities. Favorites</title>

@@ -5,7 +5,7 @@ type PremiumProps = {
 }
 
 function PremiumOrNot({offer}:PremiumProps) {
-  if (offer.isPremium === true) {
+  if (offer.isPremium) {
     return (
       <div className="place-card__mark">
         <span>Premium</span>

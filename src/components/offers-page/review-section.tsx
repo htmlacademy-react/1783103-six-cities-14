@@ -3,17 +3,21 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchReviews } from '../../store/api-actions';
 import ReviewForm from './review-form';
 import { useEffect } from 'react';
+import { getReviews } from '../../store/offers-action/selectors';
+
 
 function ReviewsSection(){
   const {offerId} = useParams();
   const dispatch = useAppDispatch();
 
   useEffect (() => {
-    if (offerId !== undefined) {
+    if (offerId) {
       dispatch(fetchReviews(offerId));
     }
   },[dispatch,offerId]);
-  const reviews = useAppSelector((state) => state.reviews);
+
+  const reviews = useAppSelector(getReviews);
+
   return(
 
     <section className="offer__reviews reviews">
@@ -54,7 +58,9 @@ function ReviewsSection(){
           </li>
         </ul>
       ))}
-      <ReviewForm/>
+      <ReviewForm
+        offerId= {offerId}
+      />
     </section>
   );
 }

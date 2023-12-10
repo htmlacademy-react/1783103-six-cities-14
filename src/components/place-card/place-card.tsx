@@ -1,10 +1,8 @@
 import { Link, } from 'react-router-dom';
 import { AppRoute, } from '../../utils/const';
 import { OffersType } from '../../types/offers-types';
-import { useState } from 'react';
 import PremiumOrNot from '../main-page/is-premium';
-import { changeToFavorites } from '../../store/api-actions';
-import { useAppDispatch } from '../../hooks';
+import Bookmark from '../bookmark';
 
 type CardImageSize = 'small' |'big';
 
@@ -23,21 +21,13 @@ const sizeMap:Record<CardImageSize, {width:string;height:string}> = {
 
 function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
 
-  const [isActive, setIsActive] = useState(false);
-  const dispatch = useAppDispatch();
 
-  const handleClick = (event) => {
+  // const dispatch = useAppDispatch();
 
-    dispatch(changeToFavorites(offer.id));
-
-    setIsActive ((current) => !current);
-  };
+  const {id, price, title, type, previewImage, } = offer;
 
   const totalRating = 5;
   const rate = `${Math.round ((totalRating - offer.rating) / totalRating * 100) }%`;
-
-  // const {isPremium, id, images, price, isFavorite, rating, title, type } = offer;
-  const {id, price, title, type, previewImage } = offer;
 
   function handleMouseEnter(){
     onCardHover?.(id);
@@ -80,20 +70,12 @@ function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
             <b className="place-card__price-value">€{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
-          <button
-            onClick = {handleClick}
-            className= {isActive ? 'place-card__bookmark-button--active button ' : 'button place-card__bookmark-button '}
-            type="button"
-          >
-            <svg
-              className="place-card__bookmark-icon"
-              width={18}
-              height={19}
-            >
-              <use xlinkHref="#icon-bookmark" />
-            </svg>
-            <span className="visually-hidden">To bookmarks</span>
-          </button>
+          <Bookmark
+            bookmarkBlock="place-card"
+            offer = {offer}
+            size = 'small'
+          />
+
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">

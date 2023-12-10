@@ -13,6 +13,7 @@ function Login() {
   const dispatch = useAppDispatch();
 
   const onSubmit = (authData: AuthData) => {
+
     dispatch (loginAction(authData));
   };
 
@@ -76,7 +77,6 @@ function Login() {
                 />
               </div>
               <button
-                // onClick = {() => navigate(AppRoute.Root)}
                 className="login__submit form__submit button"
                 type="submit"
               >

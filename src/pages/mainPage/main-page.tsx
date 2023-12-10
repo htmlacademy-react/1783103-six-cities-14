@@ -7,6 +7,7 @@ import Map from '../../components/map/map';
 import { useState,useEffect} from 'react';
 import { displayOffers } from '../../store/actions';
 import PageHeader from '../../components/main-page/header/header';
+import { getActiveCity, getSortedOffers } from '../../store/cities-action/selectors';
 
 
 function MainPage() {
@@ -22,12 +23,13 @@ function MainPage() {
 
   const dispatch = useAppDispatch();
 
+
   useEffect(() => {
     dispatch(displayOffers());
   }, [dispatch]);
 
-  const sortedOffers = useAppSelector((state) =>state.sortedOffers);
-  const offersActiveCity = useAppSelector((state) =>state.activeCity);
+  const sortedOffers = useAppSelector(getSortedOffers);
+  const offersActiveCity = useAppSelector(getActiveCity);
   const offersByCity = sortedOffers.filter((item)=> item.city?.name === offersActiveCity);
 
 

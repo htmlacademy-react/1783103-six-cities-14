@@ -4,12 +4,13 @@ import { useAppSelector } from '../../hooks';
 
 import { setActiveCity } from '../../store/actions';
 import { Link } from 'react-router-dom';
+import { getActiveCity } from '../../store/cities-action/selectors';
 
 const citiesArray = Object.values(CITIES);
 
 function CitiesList() {
 
-  const currentActiveCity = useAppSelector((state) => state.activeCity);
+  const currentActiveCity = useAppSelector(getActiveCity);
   const dispatch = useAppDispatch();
 
   return(

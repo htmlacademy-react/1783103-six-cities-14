@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { SortOptions } from '../../utils/const';
-import { getSortedOffers, getSortingOption } from '../../store/actions';
+import { getSortedOffersAction, getSortingOptionAction } from '../../store/actions';
+import { getSortedOffers, getSortingOption } from '../../store/cities-action/selectors';
 import { OffersType } from '../../types/offers-types';
 import { useState } from 'react';
 
@@ -8,14 +9,14 @@ const SortOptionsArray = Object.values(SortOptions);
 
 function SortComponent() {
 
-  const currentActiveSortOption = useAppSelector((state) => state.sortingOption);
-  let sortedOffers = useAppSelector ((state) => state.sortedOffers);
+  const currentActiveSortOption = useAppSelector(getSortingOption);
+  let sortedOffers = useAppSelector (getSortedOffers);
 
   const dispatch = useAppDispatch();
 
   const sortingOffers = (activeSortOption:SortOptions) => {
 
-    dispatch (getSortingOption(activeSortOption));
+    dispatch (getSortingOptionAction(activeSortOption));
     switch (activeSortOption) {
       case SortOptions.PriceUp:
         sortedOffers = sortedOffers.toSorted ((OfferA:OffersType,OfferB:OffersType) => (OfferA.price - OfferB.price));
@@ -29,7 +30,7 @@ function SortComponent() {
       default:
         sortedOffers.toSorted ((OfferA:OffersType,OfferB:OffersType) => (OfferB.price - OfferA.price));
     }
-    dispatch (getSortedOffers(sortedOffers));
+    dispatch (getSortedOffersAction(sortedOffers));
     return sortedOffers;
 
   };

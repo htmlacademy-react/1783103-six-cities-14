@@ -1,4 +1,4 @@
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams} from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {OffersType } from '../../types/offers-types';
 import { OffersHost } from '../../types/offers-types';
@@ -10,9 +10,10 @@ import Map from '../../components/map/map';
 import { useEffect, useState } from 'react';
 import PlaceCardList from '../../components/place-card/place-card-list';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { fetchNearbyOffers, fetchTheOffer } from '../../store/api-actions';
 import PageHeader from '../../components/main-page/header/header';
-
+import { getNearbyOffers, getTheOffer } from '../../store/offers-action/selectors';
+import { fetchNearbyOffers, fetchTheOffer } from '../../store/api-actions';
+import Bookmark from '../../components/bookmark';
 
 function Offer(){
 
@@ -34,11 +35,12 @@ function Offer(){
     }
   },[dispatch,offerId]);
 
-  const currentOffer = useAppSelector ((state) => state.offer);
-  const nearByOffers = useAppSelector ((state) => state.nearbyOffers);
+  const currentOffer = useAppSelector (getTheOffer);
+  const nearByOffers = useAppSelector (getNearbyOffers);
+  const displayedNearByOffers = nearByOffers.slice(0,4);
+
   // fix the issue with navigating to the notfound page first
-  // const {areOffersLoading} = useAppSelector((state) => state)
-  // console.log( areOffersLoading)
+
   if (!currentOffer) {
     return <Navigate to={AppRoute.NotFound}/>;
   }
@@ -84,12 +86,11 @@ function Offer(){
                 <h1 className="offer__name">
                   {currentOffer.description}
                 </h1>
-                <button className="offer__bookmark-button button" type="button">
-                  <svg className="offer__bookmark-icon" width={31} height={33}>
-                    <use xlinkHref="#icon-bookmark" />
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
+                <Bookmark
+                  offer ={currentOffer}
+                  size = 'big'
+                  bookmarkBlock = 'offer'
+                />
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
@@ -143,7 +144,7 @@ function Offer(){
             </div>
           </div>
           <Map
-            offers= {nearByOffers}
+            offers= {displayedNearByOffers}
             block="offer"
             key ={hoveredOfferId}
             currentCityId = {hoveredOfferId}
@@ -157,7 +158,7 @@ function Offer(){
             </h2>
             <div className="near-places__list places__list">
               <PlaceCardList
-                offers= {nearByOffers}
+                offers= {displayedNearByOffers}
                 onCardHover = {handleCardHover}
                 size = 'small'
               />
