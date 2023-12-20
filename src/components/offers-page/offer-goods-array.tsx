@@ -4,12 +4,12 @@ type OfferGoodsArrayProps = {
     currentOffer: OffersType;
   }
 
-function OfferGoodsArray({ currentOffer: { id, goods: offerGoods } }:OfferGoodsArrayProps){
+function OfferGoodsArray({ currentOffer: {goods: offerGoods } }:OfferGoodsArrayProps){
 
   return(
     <ul className="offer__inside-list">
       {offerGoods.map((offerGood) => (
-        <li key = {id} className="offer__inside-item">{offerGood}</li>
+        <li key = {offerGood} className="offer__inside-item">{offerGood}</li>
       ))}
     </ul>
   );

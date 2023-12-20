@@ -3,60 +3,69 @@ import Login from '../pages/login/login';
 import Favorites from '../pages/favorites/favorites';
 import Offer from '../pages/offer/offer';
 import NotFound from '../pages/not-found-page/not-found-page';
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from '../utils/const';
+import { Route, Routes } from 'react-router-dom';
+import { AppRoute} from '../utils/const';
 import {HelmetProvider} from 'react-helmet-async';
-import PrivateRoute from './private-route/private-route';
-import { OffersType } from '../types/offers-types';
-import { ReviewType } from '../types/reviews-types'; 
+import PrivateRoute from './routes/private-route/private-route';
+import { useAppSelector } from '../hooks';
+import LoadingScreen from '../pages/loading-screen/loading-page';
+import HistoryRouter from './routes/history-route/history-route';
+import browserHistory from '../browser-history';
+import { getAuthCheckedStatus, getAuthorizationStatus } from '../store/user-actions/selectors';
+import { getOffers, getOffersLoadingStatus } from '../store/cities-action/selectors';
+import GuestRoute from './routes/guest-route';
 
-type AppMainPageProps = {
-    placesCount: number;
-    offers: OffersType[];
-    reviews: ReviewType[];
+function App() {
+
+  const offersAll = useAppSelector(getOffers);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const isAuthChecked = useAppSelector(getAuthCheckedStatus);
+  const areOffersLoading = useAppSelector(getOffersLoadingStatus);
+
+  if (!isAuthChecked || areOffersLoading) {
+    return (
+      <LoadingScreen/>
+    );
   }
-
-function App({placesCount,offers,reviews}:AppMainPageProps) {
-
 
   return (
     <HelmetProvider>
-      <BrowserRouter>
+      <HistoryRouter history ={browserHistory}>
         <Routes>
           <Route
             path = {AppRoute.Root}
-            element = {<MainPage placesCount = {placesCount} offers = {offers} />}
+            element = {<MainPage offers ={offersAll}/>}
           />
           <Route
             path = {AppRoute.Login}
             element = {
-              <PrivateRoute
-                authorizationStatus={AuthorizationStatus.Auth}
+              <GuestRoute
+                authorizationStatus={authorizationStatus}
               >
                 <Login/>
-              </PrivateRoute>
+              </GuestRoute>
             }
           />
           <Route
             path = {AppRoute.Favorites}
             element = {
               <PrivateRoute
-                authorizationStatus={AuthorizationStatus.Auth}
+                authorizationStatus={authorizationStatus}
               >
-                <Favorites offers = {offers}/>
+                <Favorites/>
               </PrivateRoute>
             }
           />
           <Route
             path = {AppRoute.Offer}
-            element = {<Offer offers = {offers} reviews = {reviews} />}
+            element = {<Offer/>}
           />
           <Route
             path = '*'
             element = {<NotFound/>}
           />
         </Routes>
-      </BrowserRouter>
+      </HistoryRouter>
 
     </HelmetProvider>
   );

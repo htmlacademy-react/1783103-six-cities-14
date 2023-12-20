@@ -4,12 +4,12 @@ type OfferImageArrayProps = {
   currentOffer: OffersType;
 }
 
-function OfferImageArray({currentOffer: {id,images : offerImages}}:OfferImageArrayProps) {
+function OfferImageArray({currentOffer: {images : offerImages}}:OfferImageArrayProps) {
 
   return(
     <>
-      {offerImages.map((offerImage) => (
-        <div key = {id} className = "offer__image-wrapper">
+      {offerImages.slice(0,6).map((offerImage) => (
+        <div key = {offerImage} className = "offer__image-wrapper">
           <img
             className="offer__image"
             src={offerImage}

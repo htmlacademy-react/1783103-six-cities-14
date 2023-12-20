@@ -1,14 +1,17 @@
-import { Link } from 'react-router-dom';
-import { AppRoute } from '../../utils/const';
+/* eslint-disable react-refresh/only-export-components */
+import { Link, } from 'react-router-dom';
+import { AppRoute, } from '../../utils/const';
 import { OffersType } from '../../types/offers-types';
+import PremiumOrNot from '../main-page/is-premium';
+import Bookmark from '../bookmark';
+import { memo } from 'react';
 
 type CardImageSize = 'small' |'big';
 
 type PlaceCardProps = {
   offer: OffersType;
   size?: CardImageSize ;
-  onCardHover?: (offerId:OffersType['id']|null) => void; // need explanation
-
+  onCardHover?: (offerId:OffersType['id']|null) => void;
 }
 
 const sizeMap:Record<CardImageSize, {width:string;height:string}> = {
@@ -19,20 +22,10 @@ const sizeMap:Record<CardImageSize, {width:string;height:string}> = {
 
 function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
 
+  const {id, price, title, type, previewImage, isFavorite } = offer;
 
   const totalRating = 5;
   const rate = `${Math.round ((totalRating - offer.rating) / totalRating * 100) }%`;
-
-  function premiumOrNot() {
-    if (offer.isPremium === true) {
-      return 'Premium';
-    } else {
-      return 'NOTPremium';
-    }
-  }
-
-  // const {isPremium, id, images, price, isFavorite, rating, title, type } = offer;
-  const {id, price, title, type } = offer;
 
   function handleMouseEnter(){
     onCardHover?.(id);
@@ -55,14 +48,14 @@ function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
       onMouseLeave ={handleMouseLeave}
     >
 
-      <div className="place-card__mark">
-        <span>{premiumOrNot()}</span>
-      </div>
+      <PremiumOrNot
+        offer = {offer}
+      />
       <div className="cities__image-wrapper place-card__image-wrapper">
         <Link to= {replaceOfferParams()}>
           <img
             className="place-card__image"
-            src="img/apartment-01.jpg"
+            src={previewImage}
             alt={title}
             {...sizeMap[size]}
           />
@@ -75,19 +68,13 @@ function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
             <b className="place-card__price-value">€{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
-          <button
-            className="place-card__bookmark-button button"
-            type="button"
-          >
-            <svg
-              className="place-card__bookmark-icon"
-              width={18}
-              height={19}
-            >
-              <use xlinkHref="#icon-bookmark" />
-            </svg>
-            <span className="visually-hidden">To bookmarks</span>
-          </button>
+          <Bookmark
+            bookmarkBlock="place-card"
+            offer ={offer}
+            isFavorite = {isFavorite}
+            size = 'small'
+          />
+
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
@@ -108,4 +95,4 @@ function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
 
 }
 
-export default PlaceCard;
+export default memo(PlaceCard);

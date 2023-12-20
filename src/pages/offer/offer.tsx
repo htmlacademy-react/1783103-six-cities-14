@@ -1,28 +1,38 @@
-import Logo from '../../components/logo/logo';
-import { Navigate, useParams } from 'react-router-dom';
-import PlaceCard from '../../components/place-card/place-card';
+import { Navigate, useParams} from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import {OffersType } from '../../types/offers-types';
-import { OffersHost } from '../../types/offers-types';
+import { OffersHost} from '../../types/offers-types';
 import OfferImageArray from '../../components/offers-page/offer-image-array';
 import OfferGoodsArray from '../../components/offers-page/offer-goods-array';
 import { AppRoute } from '../../utils/const';
 import ReviewsSection from '../../components/offers-page/review-section';
-import { ReviewType } from '../../types/reviews-types';
+import Map from '../../components/map/map';
+import PlaceCardList from '../../components/place-card/place-card-list';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import PageHeader from '../../components/main-page/header/header';
+import { getNearbyOffers, getTheOffer } from '../../store/offers-action/selectors';
+import { fetchNearbyOffers, fetchTheOffer } from '../../store/api-actions';
+import Bookmark from '../../components/bookmark';
+import { useEffect } from 'react';
 
-type OfferPageProps = {
-  offers: OffersType[];
-  reviews: ReviewType[];
-}
+function Offer(){
 
-
-function Offer({offers,reviews}:OfferPageProps){
-
+  const dispatch = useAppDispatch();
   const {offerId} = useParams();
 
-  const currentOffer = offers.find((item) => item.id === offerId);
+  const currentOffer = useAppSelector (getTheOffer);
+  const nearByOffers = useAppSelector (getNearbyOffers);
+  const displayedNearByOffers = nearByOffers.slice(0,3);
+  const displayedOnMapOffers = displayedNearByOffers.concat(currentOffer);
 
-  if (!currentOffer) {
+
+  useEffect (() => {
+    if (offerId) {
+      dispatch(fetchTheOffer(offerId));
+      dispatch (fetchNearbyOffers(offerId));
+    }
+  },[dispatch,offerId]);
+
+  if (!currentOffer && !null) {
     return <Navigate to={AppRoute.NotFound}/>;
   }
 
@@ -40,47 +50,21 @@ function Offer({offers,reviews}:OfferPageProps){
     }
   }
 
-
   return(
     <div className="page">
       <Helmet>
         <title>6 cities. Offers</title>
       </Helmet>
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Logo/>
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a
-                    className="header__nav-link header__nav-link--profile"
-                    href="#"
-                  >
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                  Oliver.conner@gmail.com
-                    </span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+
+      <PageHeader/>
+
       <main className="page__main page__main--offer">
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {OfferImageArray({currentOffer})}
+              <OfferImageArray
+                currentOffer={currentOffer}
+              />
             </div>
           </div>
           <div className="offer__container container">
@@ -92,12 +76,12 @@ function Offer({offers,reviews}:OfferPageProps){
                 <h1 className="offer__name">
                   {currentOffer.description}
                 </h1>
-                <button className="offer__bookmark-button button" type="button">
-                  <svg className="offer__bookmark-icon" width={31} height={33}>
-                    <use xlinkHref="#icon-bookmark" />
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
+                <Bookmark
+                  offer ={currentOffer}
+                  isFavorite = {currentOffer.isFavorite}
+                  size = 'big'
+                  bookmarkBlock = 'offer'
+                />
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
@@ -109,10 +93,18 @@ function Offer({offers,reviews}:OfferPageProps){
               <ul className="offer__features">
                 <li className="offer__feature offer__feature--entire">{currentOffer.type}</li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {currentOffer.bedrooms} Bedrooms
+                  {currentOffer.bedrooms}
+                  {currentOffer.bedrooms === 1 ? (
+                    ' Bedroom'
+                  ) : (
+                    ' Bedrooms')}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-              Max 4 adults
+              Max {currentOffer.maxAdults}
+                  {currentOffer.maxAdults === 1 ? (
+                    ' adult'
+                  ) : (
+                    ' adults')}
                 </li>
               </ul>
               <div className="offer__price">
@@ -121,7 +113,10 @@ function Offer({offers,reviews}:OfferPageProps){
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What`&#39;`s inside</h2>
-                {OfferGoodsArray({currentOffer})}
+
+                <OfferGoodsArray
+                  currentOffer = {currentOffer}
+                />
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
@@ -144,12 +139,16 @@ function Offer({offers,reviews}:OfferPageProps){
                   </p>
                 </div>
               </div>
-              <ReviewsSection
-                reviews = {reviews}
-              />
+              <ReviewsSection/>
             </div>
           </div>
-          <section className="offer__map map" />
+          <Map
+            offers= {displayedOnMapOffers}
+            block="offer"
+            key ={currentOffer.id}
+            currentCityId = {currentOffer.id}
+          />
+
         </section>
         <div className="container">
           <section className="near-places places">
@@ -157,13 +156,11 @@ function Offer({offers,reviews}:OfferPageProps){
           Other places in the neighbourhood
             </h2>
             <div className="near-places__list places__list">
-              {offers.map((offer) => (
-                <PlaceCard
-                  key ={offer.id}
-                  offer= {offer}
-                  // onCardHover = {handleCardHover}
-                />
-              ))}
+              <PlaceCardList
+                offers= {displayedNearByOffers}
+                size = 'small'
+              />
+
             </div>
           </section>
         </div>
