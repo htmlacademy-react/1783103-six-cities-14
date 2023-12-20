@@ -1,8 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
 import { Link, } from 'react-router-dom';
 import { AppRoute, } from '../../utils/const';
 import { OffersType } from '../../types/offers-types';
 import PremiumOrNot from '../main-page/is-premium';
 import Bookmark from '../bookmark';
+import { memo } from 'react';
 
 type CardImageSize = 'small' |'big';
 
@@ -10,7 +12,6 @@ type PlaceCardProps = {
   offer: OffersType;
   size?: CardImageSize ;
   onCardHover?: (offerId:OffersType['id']|null) => void;
-
 }
 
 const sizeMap:Record<CardImageSize, {width:string;height:string}> = {
@@ -21,10 +22,7 @@ const sizeMap:Record<CardImageSize, {width:string;height:string}> = {
 
 function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
 
-
-  // const dispatch = useAppDispatch();
-
-  const {id, price, title, type, previewImage, } = offer;
+  const {id, price, title, type, previewImage, isFavorite } = offer;
 
   const totalRating = 5;
   const rate = `${Math.round ((totalRating - offer.rating) / totalRating * 100) }%`;
@@ -72,7 +70,8 @@ function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
           </div>
           <Bookmark
             bookmarkBlock="place-card"
-            offer = {offer}
+            offer ={offer}
+            isFavorite = {isFavorite}
             size = 'small'
           />
 
@@ -96,4 +95,4 @@ function PlaceCard({offer, onCardHover, size = 'big'}:PlaceCardProps) {
 
 }
 
-export default PlaceCard;
+export default memo(PlaceCard);

@@ -1,4 +1,4 @@
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import Logo from '../../components/main-page/header/logo';
 import { Helmet } from 'react-helmet-async';
 import { useAppDispatch } from '../../hooks';
@@ -9,6 +9,12 @@ function Login() {
 
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
+  const [userEmail, setUserEmail] = useState<string | []>([]);
+
+  useEffect(() => {
+    localStorage.setItem('userEmail', JSON.stringify(userEmail));
+
+  },[userEmail]);
 
   const dispatch = useAppDispatch();
 
@@ -21,6 +27,7 @@ function Login() {
     evt.preventDefault();
 
     if (loginRef.current !== null && passwordRef.current !== null) {
+      setUserEmail(loginRef.current.value);
       onSubmit({
         login: loginRef.current.value,
         password: passwordRef.current.value,

@@ -1,16 +1,17 @@
-import { ChangeEvent, Fragment, MouseEvent, useState } from 'react';
-import { useAppDispatch } from '../../hooks';
-import { postReviews } from '../../store/api-api-actions';
+import { ChangeEvent, Fragment, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { postReviews } from '../../store/api-actions';
 import { AuthorizationStatus } from '../../utils/const';
+import { getErrorStatus } from '../../store/user-actions/selectors';
+import ErrorScreen from '../../pages/error-screen';
 
+const MIN_COMMENT_LENGTH = 50;
+const MAX_COMMENT_LENGTH = 300;
 
-const MIN_COMMENT_LENGTH = 1;
-const MAX_COMMENT_LENGTH = 250;
 
 type ReviewsSectionProps = {
-  offerId: string;
+  offerId: string | undefined;
 }
-
 function ReviewForm({offerId}:ReviewsSectionProps){
   const starReviews = {
     1: 'terribly',
@@ -20,8 +21,11 @@ function ReviewForm({offerId}:ReviewsSectionProps){
     5: 'perfect',
   };
 
+  // const commentRef = useRef<HTMLInputElement | null>(null);
+
   const [rating, setRating ] = useState('');
   const [comment, setComment] = useState('');
+  const [isReviewSending, setIsReviewSending] = useState(false);
 
   const isValid =
     comment.length >= MIN_COMMENT_LENGTH &&
@@ -36,19 +40,23 @@ function ReviewForm({offerId}:ReviewsSectionProps){
   }
   const dispatch = useAppDispatch();
 
-  const handleSubmitbutton = (evt: MouseEvent <HTMLFormElement>) => {
-    evt.preventDefault();
-    if (isValid && AuthorizationStatus.Auth){
 
+  function handleSubmitbutton () {
+
+    if (isValid && AuthorizationStatus.Auth){
+      setIsReviewSending(true);
       const review = {
         comment: comment,
         rating : +rating,
       };
       dispatch (postReviews({offerId:offerId,review:review}));
+      setComment('');
+      setRating('');
     }
+    setIsReviewSending(false);
+  }
 
-  };
-
+  const hasError = useAppSelector(getErrorStatus);
 
   return (
     <form className="reviews__form form" action="#" method="post">
@@ -69,7 +77,8 @@ function ReviewForm({offerId}:ReviewsSectionProps){
                 type="radio"
                 checked = {rating === starReview}
                 onChange = {handleInputChange}
-                // ref = {ratingRef}
+                disabled = {isReviewSending}
+
               />
               <label
                 htmlFor={`${starReview}-stars`}
@@ -90,9 +99,9 @@ function ReviewForm({offerId}:ReviewsSectionProps){
         id="review"
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
-        defaultValue={''}
-        onChange = {handleTextAreaChange}
-        // ref = {commentRef}
+        value={comment}
+        onChange={handleTextAreaChange}
+
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
@@ -103,9 +112,15 @@ function ReviewForm({offerId}:ReviewsSectionProps){
         </p>
         <button
           className="reviews__submit form__submit button"
-          type="submit"
-          disabled= {!isValid}
-          onClick={() => handleSubmitbutton}
+          type="button"
+          disabled= {!isValid || isReviewSending}
+          onClick={() => handleSubmitbutton()}
+          { ...hasError ? (
+            <ErrorScreen/>
+          ) : (
+            null
+          )
+          }
         >
         Submit
         </button>

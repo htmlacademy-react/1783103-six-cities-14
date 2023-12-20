@@ -8,7 +8,7 @@ function OfferImageArray({currentOffer: {images : offerImages}}:OfferImageArrayP
 
   return(
     <>
-      {offerImages.map((offerImage) => (
+      {offerImages.slice(0,6).map((offerImage) => (
         <div key = {offerImage} className = "offer__image-wrapper">
           <img
             className="offer__image"

@@ -12,6 +12,7 @@ type MapProps = {
   currentCityId: string | null;
   block: string;
   offers:OffersType[];
+
 }
 const defaultIcon = new Icon({
   iconUrl: URL_MARKER_DEFAULT,
@@ -55,7 +56,6 @@ function Map ({offers,currentCityId,block}: MapProps) {
   return (
     <section
       className={`${block}__map map`}
-      // style={{height: '500px'}}
       ref={mapRef}
     />
   );

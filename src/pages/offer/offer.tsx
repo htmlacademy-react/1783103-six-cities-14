@@ -1,47 +1,38 @@
 import { Navigate, useParams} from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import {OffersType } from '../../types/offers-types';
-import { OffersHost } from '../../types/offers-types';
+import { OffersHost} from '../../types/offers-types';
 import OfferImageArray from '../../components/offers-page/offer-image-array';
 import OfferGoodsArray from '../../components/offers-page/offer-goods-array';
 import { AppRoute } from '../../utils/const';
 import ReviewsSection from '../../components/offers-page/review-section';
 import Map from '../../components/map/map';
-import { useEffect, useState } from 'react';
 import PlaceCardList from '../../components/place-card/place-card-list';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import PageHeader from '../../components/main-page/header/header';
 import { getNearbyOffers, getTheOffer } from '../../store/offers-action/selectors';
 import { fetchNearbyOffers, fetchTheOffer } from '../../store/api-actions';
 import Bookmark from '../../components/bookmark';
+import { useEffect } from 'react';
 
 function Offer(){
 
-  const [hoveredOfferId, setHoveredOfferId] = useState <
-  OffersType['id'] | null
-  > (null);
-  function handleCardHover(offerId:OffersType['id']|null){
-    setHoveredOfferId(offerId);
-  }
-
+  const dispatch = useAppDispatch();
   const {offerId} = useParams();
 
-  const dispatch = useAppDispatch();
+  const currentOffer = useAppSelector (getTheOffer);
+  const nearByOffers = useAppSelector (getNearbyOffers);
+  const displayedNearByOffers = nearByOffers.slice(0,3);
+  const displayedOnMapOffers = displayedNearByOffers.concat(currentOffer);
+
 
   useEffect (() => {
-    if (offerId !== undefined) {
+    if (offerId) {
       dispatch(fetchTheOffer(offerId));
       dispatch (fetchNearbyOffers(offerId));
     }
   },[dispatch,offerId]);
 
-  const currentOffer = useAppSelector (getTheOffer);
-  const nearByOffers = useAppSelector (getNearbyOffers);
-  const displayedNearByOffers = nearByOffers.slice(0,4);
-
-  // fix the issue with navigating to the notfound page first
-
-  if (!currentOffer) {
+  if (!currentOffer && !null) {
     return <Navigate to={AppRoute.NotFound}/>;
   }
 
@@ -58,7 +49,6 @@ function Offer(){
       return 'Not even close to being a pro';
     }
   }
-
 
   return(
     <div className="page">
@@ -88,6 +78,7 @@ function Offer(){
                 </h1>
                 <Bookmark
                   offer ={currentOffer}
+                  isFavorite = {currentOffer.isFavorite}
                   size = 'big'
                   bookmarkBlock = 'offer'
                 />
@@ -102,10 +93,18 @@ function Offer(){
               <ul className="offer__features">
                 <li className="offer__feature offer__feature--entire">{currentOffer.type}</li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {currentOffer.bedrooms} Bedrooms
+                  {currentOffer.bedrooms}
+                  {currentOffer.bedrooms === 1 ? (
+                    ' Bedroom'
+                  ) : (
+                    ' Bedrooms')}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-              Max 4 adults
+              Max {currentOffer.maxAdults}
+                  {currentOffer.maxAdults === 1 ? (
+                    ' adult'
+                  ) : (
+                    ' adults')}
                 </li>
               </ul>
               <div className="offer__price">
@@ -144,10 +143,10 @@ function Offer(){
             </div>
           </div>
           <Map
-            offers= {displayedNearByOffers}
+            offers= {displayedOnMapOffers}
             block="offer"
-            key ={hoveredOfferId}
-            currentCityId = {hoveredOfferId}
+            key ={currentOffer.id}
+            currentCityId = {currentOffer.id}
           />
 
         </section>
@@ -159,7 +158,6 @@ function Offer(){
             <div className="near-places__list places__list">
               <PlaceCardList
                 offers= {displayedNearByOffers}
-                onCardHover = {handleCardHover}
                 size = 'small'
               />
 

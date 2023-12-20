@@ -6,22 +6,21 @@ import NotFound from '../pages/not-found-page/not-found-page';
 import { Route, Routes } from 'react-router-dom';
 import { AppRoute} from '../utils/const';
 import {HelmetProvider} from 'react-helmet-async';
-import PrivateRoute from './private-route/private-route';
+import PrivateRoute from './routes/private-route/private-route';
 import { useAppSelector } from '../hooks';
 import LoadingScreen from '../pages/loading-screen/loading-page';
-import HistoryRouter from './history-route/history-route';
+import HistoryRouter from './routes/history-route/history-route';
 import browserHistory from '../browser-history';
-import { getAuthCheckedStatus, getAuthorizationStatus, getErrorStatus } from '../store/user-actions/selectors';
-import { getOffersLoadingStatus } from '../store/cities-action/selectors';
-// import ErrorScreen from '../pages/error-screen';
+import { getAuthCheckedStatus, getAuthorizationStatus } from '../store/user-actions/selectors';
+import { getOffers, getOffersLoadingStatus } from '../store/cities-action/selectors';
+import GuestRoute from './routes/guest-route';
 
 function App() {
 
-  // const offersAll = useAppSelector(getOffers);
+  const offersAll = useAppSelector(getOffers);
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const isAuthChecked = useAppSelector(getAuthCheckedStatus);
   const areOffersLoading = useAppSelector(getOffersLoadingStatus);
-  // const hasError = useAppSelector(getErrorStatus);
 
   if (!isAuthChecked || areOffersLoading) {
     return (
@@ -29,23 +28,22 @@ function App() {
     );
   }
 
-  // if (hasError) {
-  //   return (
-  //     <ErrorScreen />);
-  // }
-
   return (
     <HelmetProvider>
       <HistoryRouter history ={browserHistory}>
         <Routes>
           <Route
             path = {AppRoute.Root}
-            element = {<MainPage />}
+            element = {<MainPage offers ={offersAll}/>}
           />
           <Route
             path = {AppRoute.Login}
             element = {
-              <Login/>
+              <GuestRoute
+                authorizationStatus={authorizationStatus}
+              >
+                <Login/>
+              </GuestRoute>
             }
           />
           <Route
@@ -54,14 +52,13 @@ function App() {
               <PrivateRoute
                 authorizationStatus={authorizationStatus}
               >
-                <Favorites />
-                {/* <Favorites offers = {offersAll}/> */}
+                <Favorites/>
               </PrivateRoute>
             }
           />
           <Route
             path = {AppRoute.Offer}
-            element = {<Offer />} //reviews = {reviews}
+            element = {<Offer/>}
           />
           <Route
             path = '*'

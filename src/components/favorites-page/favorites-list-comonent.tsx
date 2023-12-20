@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { OffersType } from '../../types/offers-types';
 import { CITIES } from '../../utils/const';
 import PlaceCardList from '../place-card/place-card-list';
@@ -7,14 +8,10 @@ type FavoritesListComponentProps = {
   favoritesCity:CITIES;
 }
 
-// function get getFavoritesByCity (favorites) {
-//   return favorites.reduce<>
-// }
-
 function FavoritesListComponent({offers,favoritesCity}:FavoritesListComponentProps) {
 
-  // const currentOffers = useAppSelector((state) => state.offers);
-  const offersByCity = offers.filter((item)=> item.city?.name === favoritesCity);
+
+  const offersByCity = useMemo(()=>offers.filter((item)=> item.city?.name === favoritesCity),[offers,favoritesCity]);
 
   return(
     <li className="favorites__locations-items">

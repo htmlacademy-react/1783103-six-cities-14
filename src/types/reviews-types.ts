@@ -1,3 +1,5 @@
+import { ReviewData } from './auth-data-type';
+
 export type ReviewType = {
     comment: string;
     date: string;
@@ -12,3 +14,8 @@ export type ReviewUserType = {
     isPro: boolean;
     name: string;
   };
+
+export type ReviewApiThing = {
+    offerId:string | undefined;
+    review: ReviewData;
+}

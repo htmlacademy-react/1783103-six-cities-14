@@ -3,13 +3,12 @@ import { AppDispatch,State } from '../types/state';
 import { AxiosInstance } from 'axios';
 import { OffersType } from '../types/offers-types';
 import { APIRoute, AppRoute, TIMEOUT_SHOW_ERROR } from '../utils/const';
-import { getReviews, redirectToRoute, setError, setUser } from './actions';
-import { AuthData } from '../types/auth-data-type';
+import {getReviews,redirectToRoute, setError } from './actions';
+import { AuthData} from '../types/auth-data-type';
 import { UserData } from '../types/user-data-types';
 import { dropToken, saveToken } from '../services/token';
 import { store } from '.';
-import { ReviewType } from '../types/reviews-types';
-
+import { ReviewApiThing, ReviewType } from '../types/reviews-types';
 
 export const fetchOffersAction = createAsyncThunk <OffersType[], undefined, {
     dispatch: AppDispatch;
@@ -24,8 +23,6 @@ export const fetchOffersAction = createAsyncThunk <OffersType[], undefined, {
     },
   );
 
-// add action for displaying  a single offer by id
-
 export const fetchTheOffer = createAsyncThunk <OffersType,OffersType['id'] , {
     dispatch: AppDispatch;
     state: State;
@@ -34,14 +31,11 @@ export const fetchTheOffer = createAsyncThunk <OffersType,OffersType['id'] , {
   >(
     'offer/fetchOffer',
     async (offerId, {extra:api}) => {
-
       const {data} = await api.get <OffersType> (`${APIRoute.offers}/${offerId}`);
       return data;
-    //   dispatch(findTheOffer(data));
     },
   );
 
-// add action for dispalying nearby offers
 
 export const fetchNearbyOffers = createAsyncThunk <OffersType[],OffersType['id'] , {
     dispatch: AppDispatch;
@@ -51,14 +45,10 @@ export const fetchNearbyOffers = createAsyncThunk <OffersType[],OffersType['id']
   >(
     'offer/fetchNearbyOffers',
     async (offerId, {extra:api}) => {
-
       const {data} = await api.get <OffersType[]> (`${APIRoute.offers}/${offerId}${APIRoute.NearbyOffers}`);
       return data;
     },
   );
-
-
-// add action for dispalying existing reviews
 
 export const fetchReviews = createAsyncThunk<void, OffersType['id'],{
     dispatch: AppDispatch;
@@ -73,20 +63,29 @@ export const fetchReviews = createAsyncThunk<void, OffersType['id'],{
   }
 );
 
-// add action to post reviews
+export const postReviews = createAsyncThunk<ReviewType, ReviewApiThing,{
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+}
+>(
+  '/offer/postReview',
+  async (object,{extra:api}) => {
+    const {offerId,review} = object;
+    const {data} = await api.post <ReviewType>(`${APIRoute.Reviews}/${offerId}`,review);
+    return data;
+  }
+);
 
-// Gotta fix the Favorites page,
-//as the favorite offers are not being sent to the server just yet
-export const changeToFavorites = createAsyncThunk<OffersType[], OffersType,{
+export const changeToFavorites = createAsyncThunk<OffersType, OffersType,{
     dispatch: AppDispatch;
     state:State;
     extra:AxiosInstance;
 }
 >(
   'offers/changeToFavorites',
-
-  async({id,isFavorite}, { extra:api}) => {
-    const{data} = await api.post <OffersType[]>(
+  async({id,isFavorite}, {extra:api}) => {
+    const{data} = await api.post <OffersType>(
       `${APIRoute.Favorites}/${id}/${Number(isFavorite)}`
     );
     return data;
@@ -100,7 +99,7 @@ export const fetchFavorites = createAsyncThunk<OffersType[], OffersType[], {
   }
   >(
     'favorite/fetchFavorites',
-    async (_arg, { extra: api}) => {
+    async (_arg, {extra: api}) => {
       const {data} = await api.get <OffersType[]> (APIRoute.Favorites);
       return data;
     },
@@ -115,7 +114,6 @@ export const checkAuthAction = createAsyncThunk<void, undefined, {
     'user/checkAuth',
     async (_arg, {extra: api}) => {
       await api.get (APIRoute.Login);
-
     },
   );
 
@@ -129,7 +127,6 @@ export const loginAction = createAsyncThunk<void, AuthData, {
     async ({login: email, password}, {dispatch, extra: api}) => {
       const {data: {token}} = await api.post<UserData>(APIRoute.Login, {email, password});
       saveToken(token);
-      dispatch(setUser(email));
       dispatch(redirectToRoute(AppRoute.Root));
     },
   );
@@ -141,9 +138,8 @@ export const logoutAction = createAsyncThunk<void, undefined, {
   }
   >(
     'user/logout',
-    async (_arg, {dispatch,extra: api}) => {
+    async (_arg, {extra: api}) => {
       await api.delete(APIRoute.Logout);
-      dispatch(redirectToRoute(AppRoute.Login));
       dropToken();
     },
   );

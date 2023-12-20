@@ -1,22 +1,30 @@
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useAppSelector } from '../../hooks';
 import { SortOptions } from '../../utils/const';
-import { getSortedOffersAction, getSortingOptionAction } from '../../store/actions';
-import { getSortedOffers, getSortingOption } from '../../store/cities-action/selectors';
+import { getActiveCity,} from '../../store/cities-action/selectors';
 import { OffersType } from '../../types/offers-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+type SortComponentProps = {
+  sortedOffers: OffersType[] ;
+  setSortedOffers:(sortedOffers: OffersType[]) => void;
+  defaultOffers: OffersType[];
+}
 
 const SortOptionsArray = Object.values(SortOptions);
 
-function SortComponent() {
+function SortComponent({sortedOffers, setSortedOffers, defaultOffers}: SortComponentProps) {
 
-  const currentActiveSortOption = useAppSelector(getSortingOption);
-  let sortedOffers = useAppSelector (getSortedOffers);
+  const offersActiveCity = useAppSelector(getActiveCity);
+  const [sortingOption, setSortingOption] = useState<SortOptions> (SortOptions.Popular);
 
-  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setSortingOption(SortOptions.Popular);
+  },[offersActiveCity]);
 
   const sortingOffers = (activeSortOption:SortOptions) => {
 
-    dispatch (getSortingOptionAction(activeSortOption));
+    setSortingOption(activeSortOption);
     switch (activeSortOption) {
       case SortOptions.PriceUp:
         sortedOffers = sortedOffers.toSorted ((OfferA:OffersType,OfferB:OffersType) => (OfferA.price - OfferB.price));
@@ -28,9 +36,9 @@ function SortComponent() {
         sortedOffers = sortedOffers.toSorted((OfferA:OffersType,OfferB:OffersType) => (OfferA.rating - OfferB.rating));
         break;
       default:
-        sortedOffers.toSorted ((OfferA:OffersType,OfferB:OffersType) => (OfferB.price - OfferA.price));
+        sortedOffers = defaultOffers;
     }
-    dispatch (getSortedOffersAction(sortedOffers));
+    setSortedOffers(sortedOffers);
     return sortedOffers;
 
   };
@@ -38,6 +46,7 @@ function SortComponent() {
   function handleClick() {
     setIsOpened((prevIsOpened) => !prevIsOpened);
   }
+
   //Need to add close on esc button;
 
 
@@ -45,7 +54,7 @@ function SortComponent() {
     <form className="places__sorting" action="#" method="get">
       <span className="places__sorting-caption">Sort by</span>
       <span className="places__sorting-type" tabIndex={0} onClick = {handleClick}>
-        {currentActiveSortOption}
+        {sortingOption}
         <svg className="places__sorting-arrow" width={7} height={4}>
           <use xlinkHref="#icon-arrow-select" />
         </svg>
@@ -54,7 +63,7 @@ function SortComponent() {
         {SortOptionsArray.map((activeSortOption) => (
           <li key = {activeSortOption}
             className={`places__option
-                ${activeSortOption === currentActiveSortOption ? 'places__option--active' : ''}`}
+                ${activeSortOption === activeSortOption ? 'places__option--active' : ''}`}
             tabIndex={0}
             onClick={() => {
               sortingOffers(activeSortOption);

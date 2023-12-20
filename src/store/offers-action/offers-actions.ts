@@ -10,7 +10,8 @@ const initialState: FetchTheOfferAction = {
   offer: null,
   nearByOffers: [],
   reviews: [],
-  review: undefined
+  review: undefined,
+  hasError: false,
 };
 
 
@@ -24,8 +25,8 @@ export const fetchTheOfferAction = createSlice({
         state.areOffersLoading = true;
       })
       .addCase (fetchTheOffer.fulfilled, (state,action) => {
-        state.offer = action.payload;
         state.areOffersLoading = false;
+        state.offer = action.payload;
       })
       .addCase (fetchNearbyOffers.pending, (state) => {
         state.areOffersLoading = true;
@@ -37,8 +38,14 @@ export const fetchTheOfferAction = createSlice({
       .addCase (getReviews, (state,action) => {
         state.reviews = action.payload;
       })
+      .addCase (postReviews.pending, (state) => {
+        state.areOffersLoading = true;
+      })
       .addCase (postReviews.fulfilled, (state, action) => {
-        state.review = action.payload;
+        state.reviews.push(action.payload);
+      })
+      .addCase (postReviews.rejected, (state) => {
+        state.hasError = true;
       });
   }
 });

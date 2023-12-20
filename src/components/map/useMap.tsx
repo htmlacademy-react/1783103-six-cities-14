@@ -8,6 +8,7 @@ function useMap(mapRef:MutableRefObject <HTMLElement | null>, offers:OffersType[
 
 
   useEffect(() => {
+
     if (mapRef.current && !isRenderedRef.current) {
       const instance = leaflet.map(mapRef.current, {
         center: {

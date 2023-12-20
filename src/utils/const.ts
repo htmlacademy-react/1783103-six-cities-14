@@ -50,5 +50,7 @@ export enum NameSpace {
   User = 'user',
 }
 
+export const DATE_FORMAT = ('MMMM-YYYY');
+
 export const TIMEOUT_SHOW_ERROR = 2000;
 

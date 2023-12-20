@@ -2,31 +2,23 @@ import { Link } from 'react-router-dom';
 import { AppRoute } from '../../utils/const';
 import { Helmet } from 'react-helmet-async';
 import FavoritesListComponent from '../../components/favorites-page/favorites-list-comonent';
-import {useAppDispatch, useAppSelector } from '../../hooks';
-// import { getFavoriteOffers } from '../../store/actions';
+import {useAppSelector } from '../../hooks';
 import PageHeader from '../../components/main-page/header/header';
 import { getFavoriteOffers } from '../../store/cities-action/selectors';
-import { useEffect } from 'react';
-import { fetchFavorites } from '../../store/api-api-actions';
-import { OffersType } from '../../types/offers-types';
+import FavoritesEmpty from '../../components/favorites-page/favorites-empty';
 
-// children: ReactNode; add this type?
-
-type FavoritesProps = {
-  offers: OffersType[];
-}
-
-function Favorites({offers}:FavoritesProps) {
-
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(fetchFavorites(offers));
-  }, [offers,dispatch]);
+function Favorites() {
 
   const favorites = useAppSelector(getFavoriteOffers);
 
+  const favoritesCity = favorites.map((favoriteCity) => (
+    favoriteCity.city.name
+  ));
+
+  function removeDuplicates() {
+    return favoritesCity.filter((item,index) => favoritesCity.indexOf(item) === index);
+  }
+  const favoritesCities = (removeDuplicates());
 
   return (
 
@@ -35,24 +27,27 @@ function Favorites({offers}:FavoritesProps) {
         <title>6 cities. Favorites</title>
       </Helmet>
       <PageHeader/>
+      {favorites.length !== 0 ? (
+        <main className="page__main page__main--favorites">
+          <div className="page__favorites-container container">
+            <section className="favorites">
+              <h1 className="favorites__title">Saved listing</h1>
+              <ul className="favorites__list">
+                {favoritesCities.map((favoriteCity) => (
+                  <FavoritesListComponent
+                    key = {favoriteCity}
+                    offers= {favorites}
+                    favoritesCity= {favoriteCity}
+                  />
+                ))}
 
-      <main className="page__main page__main--favorites">
-        <div className="page__favorites-container container">
-          <section className="favorites">
-            <h1 className="favorites__title">Saved listing</h1>
-            <ul className="favorites__list">
-              {favorites.map((offer) => (
-                <FavoritesListComponent
-                  key = {offer.id}
-                  offers= {favorites}
-                  favoritesCity = {offer.city.name}
-                />
-              ))}
-
-            </ul>
-          </section>
-        </div>
-      </main>
+              </ul>
+            </section>
+          </div>
+        </main>
+      ) : (
+        <FavoritesEmpty/>
+      )}
       <footer className="footer container">
         <Link className="footer__logo-link" to={AppRoute.Root}>
           <img

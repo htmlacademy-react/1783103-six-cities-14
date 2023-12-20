@@ -4,11 +4,15 @@ import { fetchReviews } from '../../store/api-actions';
 import ReviewForm from './review-form';
 import { useEffect } from 'react';
 import { getReviews } from '../../store/offers-action/selectors';
+import { getAuthorizationStatus } from '../../store/user-actions/selectors';
+import { AuthorizationStatus, DATE_FORMAT } from '../../utils/const';
+import dayjs from 'dayjs';
 
 
 function ReviewsSection(){
   const {offerId} = useParams();
   const dispatch = useAppDispatch();
+  const currentAuthorizationStatus = useAppSelector(getAuthorizationStatus);
 
   useEffect (() => {
     if (offerId) {
@@ -17,6 +21,10 @@ function ReviewsSection(){
   },[dispatch,offerId]);
 
   const reviews = useAppSelector(getReviews);
+
+  function formatDate(item:string){
+    return dayjs(item).format(DATE_FORMAT);
+  }
 
   return(
 
@@ -51,16 +59,21 @@ function ReviewsSection(){
               <p className="reviews__text">
                 {review.comment}
               </p>
-              <time className="reviews__time" dateTime={review.date}>
-                {review.date}
+              <time className="reviews__time" dateTime={formatDate(review.date)}>
+                {formatDate(review.date)}
               </time>
             </div>
           </li>
         </ul>
       ))}
-      <ReviewForm
-        offerId= {offerId}
-      />
+      {currentAuthorizationStatus === AuthorizationStatus.Auth ? (
+        <ReviewForm
+          offerId= {offerId}
+        />
+      ) : (
+        null
+      )}
+
     </section>
   );
 }

@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { OffersType } from '../types/offers-types';
 import { AppRoute, AuthorizationStatus } from '../utils/const';
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { changeToFavorites } from '../store/api-actions';
+import { getAuthorizationStatus } from '../store/user-actions/selectors';
+import { useState } from 'react';
 
 type BookmarkIconSize = 'small' |'big';
 
@@ -10,6 +12,8 @@ type BookmarkProps = {
     offer:OffersType;
     size?: BookmarkIconSize ;
     bookmarkBlock : string;
+    isFavorite: boolean;
+
 }
 
 const sizeMap:Record<BookmarkIconSize, {width:string;height:string}> = {
@@ -17,30 +21,34 @@ const sizeMap:Record<BookmarkIconSize, {width:string;height:string}> = {
   big: {width:'31', height:'33'}
 };
 
-function Bookmark ({offer, size = 'big', bookmarkBlock}: BookmarkProps) {
+function Bookmark ({offer,isFavorite, size = 'big', bookmarkBlock}: BookmarkProps) {
+  const currentAuthorizationStatus = useAppSelector(getAuthorizationStatus);
 
-  const {isFavorite } = offer;
-
-  // const [isActive, handleFavoriteChange] = useFavoriteOffers();
+  const [isActive, setIsActive] = useState(isFavorite);
 
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
+
   const handleFavoriteChange = () => {
-    if (!AuthorizationStatus.Auth){
+    if (currentAuthorizationStatus === AuthorizationStatus.NoAuth){
       return navigate(AppRoute.Login);
-    } else {
-      dispatch (changeToFavorites({...offer, isFavorite: !offer.isFavorite}));
     }
+    isFavorite = !isActive;
+    setIsActive(isFavorite);
+
+    dispatch(changeToFavorites({...offer, isFavorite: !offer.isFavorite}));
 
   };
 
   return (
 
     <button
-      onClick = {handleFavoriteChange}
-      className= {isFavorite ? `${bookmarkBlock}__bookmark-button--active button` : `button ${bookmarkBlock}__bookmark-button `}
+      onClick = {() =>{
+        handleFavoriteChange();
+      }}
+      className= {isFavorite || isActive ? `${bookmarkBlock}__bookmark-button--active button` : `button ${bookmarkBlock}__bookmark-button `}
       type="button"
 
     >
